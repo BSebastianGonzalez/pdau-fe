@@ -4,7 +4,7 @@ const Button = ({ text = "Registrar Denuncia Anónima", imageSrc = "img/default-
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center justify-center p-5 bg-gray-200 border border-black rounded-lg shadow-md w-100 h-30 hover:bg-gray-300"
+      className="flex flex-col items-center justify-center p-5 bg-gray-200 border border-black rounded-lg shadow-md w-100 h-30 hover:bg-gray-300 transform transition-transform duration-300 hover:scale-105"
     >
       <span className="text-base mb-2">{text}</span>
       <img
