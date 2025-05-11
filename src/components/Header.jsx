@@ -9,6 +9,9 @@ const Header = () => {
           alt="UFPS Logo" 
           className="h-12 md:h-16" 
         />
+        <p className="text-base md:text-lg font-bold">
+          Plataforma de denuncias anónimas para la comunidad universitaria
+        </p>
       </div>
     </header>
   );
