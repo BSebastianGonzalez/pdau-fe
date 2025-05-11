@@ -7,7 +7,7 @@ const ComplaintSection = () => {
     <div className="flex flex-col items-center space-y-12 w-full px-4">
       {/* Título principal alineado a la izquierda */}
       <div className="w-full max-w-5xl">
-        <h1 className="text-6xl text-left font-bold mt-10">
+        <h1 className="text-6xl text-center font-bold mt-10">
           Registro de denuncia anónima
         </h1>
       </div>
