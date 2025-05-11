@@ -11,10 +11,11 @@
   margin-bottom: 4rem; /* Espaciado debajo del título */
 }
 
+/* Ajuste para evitar sobrescribir estilos de Tailwind */
 .main-content p {
-  font-size: 1.120rem; /* Tamaño del texto */
-  line-height: 1.75rem; /* Altura de línea */
-  color: #4a4a4a; /* Color del texto */
+  line-height: 1.75rem; /* Mantener altura de línea */
   max-width: 1000px; /* Limitar el ancho del texto */
   margin: 0 auto; /* Centrar el texto */
 }
+
+/* Elimina el color y tamaño global para que Tailwind controle estos estilos */
