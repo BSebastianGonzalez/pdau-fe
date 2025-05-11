@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../../../components/button";
+import Button from "../../../../components/button";
 import { Link } from "react-router-dom";
 
 const ComplaintSection = () => {
@@ -44,10 +44,12 @@ const ComplaintSection = () => {
 
       {/* Botones */}
       <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-8">
+        <Link to="/register" className="flex">
         <Button
           text="Seguir con la denuncia"
           className="bg-red-600 hover:bg-red-700 text-white"
         />
+        </Link>
         <Link to="/" className="flex">
           <Button
             text="Cancelar"

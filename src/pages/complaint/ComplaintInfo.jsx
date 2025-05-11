@@ -1,7 +1,6 @@
 import React from "react";
 import UserLayout from "../../modules/user/layouts/UserLayout";
-import Button from "../../components/button";
-import ComplaintSection from "../../modules/user/components/ComplaintSection";
+import ComplaintSection from "../../modules/user/complaint/components/ComplaintSection";
 
 const ComplaintInfo = () => {
 
