@@ -18,4 +18,20 @@
   margin: 0 auto; /* Centrar el texto */
 }
 
-/* Elimina el color y tamaño global para que Tailwind controle estos estilos */
+.custom-button {
+  background-color: #d32f2f; /* Rojo */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.custom-button:hover {
+  background-color: #b71c1c; /* Rojo más oscuro */
+}

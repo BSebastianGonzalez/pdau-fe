@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = ({ text = "Registrar Denuncia Anónima", imageSrc = "img/default-icon.png", onClick }) => {
+const HomeButton = ({ text = "Registrar Denuncia Anónima", imageSrc = "img/default-icon.png", onClick }) => {
   return (
     <button
       onClick={onClick}
@@ -16,4 +16,4 @@ const Button = ({ text = "Registrar Denuncia Anónima", imageSrc = "img/default-
   );
 };
 
-export default Button;
+export default HomeButton;

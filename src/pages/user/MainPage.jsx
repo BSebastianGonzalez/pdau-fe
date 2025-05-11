@@ -1,6 +1,7 @@
 import React from "react";
 import UserLayout from "../../modules/user/layouts/UserLayout";
-import Button from "../../modules/user/components/Button";
+import HomeButton from "../../modules/user/components/HomeButton";
+import { Link } from "react-router-dom";
 
 const MainPage = () => {
   return (
@@ -20,17 +21,19 @@ const MainPage = () => {
         </p>
         <div className="flex flex-wrap justify-center gap-10 mt-12">
           <div className="w-100 text-center"> {/* Contenedor con ancho fijo */}
-            <Button
+            <Link to="/complaint">
+            <HomeButton
               text="Registrar Denuncia Anónima"
               imageSrc="img/complaint_register.png"
               onClick={() => console.log("Registrar Denuncia Anónima")}
             />
+            </Link>
             <p className="text-base font-bold text-black mt-2">
               Envía una denuncia de forma anónima, selecciona una categoría y adjunta evidencia opcional.
             </p>
           </div>
           <div className="w-100 text-center"> {/* Contenedor con ancho fijo */}
-            <Button
+            <HomeButton
               text="Consultar Estado De Denuncia Anónima"
               imageSrc="img/status_consult.png"
               onClick={() => console.log("Consultar Estado De Denuncia Anónima")}
@@ -40,7 +43,7 @@ const MainPage = () => {
             </p>
           </div>
           <div className="w-100 text-center"> {/* Contenedor con ancho fijo */}
-            <Button
+            <HomeButton
               text="Consultar Marco Legal"
               imageSrc="img/law_consult.png"
               onClick={() => console.log("Consultar Marco Legal")}

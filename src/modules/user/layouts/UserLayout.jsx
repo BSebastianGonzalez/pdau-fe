@@ -6,8 +6,8 @@ const UserLayout = ({ children }) => {
     <div className="flex flex-col min-h-screen w-full">
       {/* Header fijo en la parte superior */}
       <Header />
-      {/* Contenido principal con fondo blanco */}
-      <main style={{ flex: 1, backgroundColor: 'white', paddingTop: '70px' }}>
+      {/* Contenido principal con margen superior dinámico */}
+      <main className="flex-1 w-full bg-white pt-16 md:pt-20">
         {children}
       </main>
     </div>
