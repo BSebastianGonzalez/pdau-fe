@@ -8,20 +8,19 @@ const CategorySelector = ({ categories, onSelect }) => {
   const [error, setError] = useState(""); // Estado para manejar el mensaje de error
   const dropdownRef = useRef(null); // Referencia para detectar clics fuera
 
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearch(value);
+  useEffect(() => {
+    // Filtrar categorías cuando cambie la búsqueda o las categorías
     setFilteredCategories(
       categories.filter(
         (category) =>
-          category.toLowerCase().includes(value.toLowerCase()) &&
-          !selectedCategories.includes(category)
+          category.nombre.toLowerCase().includes(search.toLowerCase()) &&
+          !selectedCategories.some((selected) => selected.id === category.id)
       )
     );
-  };
+  }, [search, categories, selectedCategories]);
 
   const handleSelect = (category) => {
-    if (!selectedCategories.includes(category)) {
+    if (!selectedCategories.some((selected) => selected.id === category.id)) {
       const updatedCategories = [...selectedCategories, category];
       setSelectedCategories(updatedCategories);
       onSelect(updatedCategories); // Notifica al padre las categorías seleccionadas
@@ -33,7 +32,7 @@ const CategorySelector = ({ categories, onSelect }) => {
 
   const handleRemove = (category) => {
     const updatedCategories = selectedCategories.filter(
-      (item) => item !== category
+      (item) => item.id !== category.id
     );
     setSelectedCategories(updatedCategories);
     onSelect(updatedCategories); // Notifica al padre las categorías seleccionadas
@@ -59,12 +58,12 @@ const CategorySelector = ({ categories, onSelect }) => {
   return (
     <div className="relative w-full" ref={dropdownRef}>
       <div className="flex flex-wrap gap-2 mb-2">
-        {selectedCategories.map((category, index) => (
+        {selectedCategories.map((category) => (
           <div
-            key={index}
+            key={category.id}
             className="flex items-center bg-gray-200 text-gray-800 px-2 py-1 rounded-md"
           >
-            <span>{category}</span>
+            <span>{category.nombre}</span>
             <button
               onClick={() => handleRemove(category)}
               className="ml-2 text-red-500 hover:text-red-700"
@@ -78,19 +77,19 @@ const CategorySelector = ({ categories, onSelect }) => {
         type="text"
         placeholder="Selecciona una categoría"
         value={search}
-        onChange={handleSearch}
+        onChange={(e) => setSearch(e.target.value)}
         onFocus={() => setIsOpen(true)}
         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       {isOpen && (
         <ul className="absolute z-10 bg-white border border-gray-300 rounded-md mt-1 w-full max-h-40 overflow-y-auto">
-          {filteredCategories.map((category, index) => (
+          {filteredCategories.map((category) => (
             <li
-              key={index}
+              key={category.id}
               onClick={() => handleSelect(category)}
               className="p-2 hover:bg-gray-100 cursor-pointer"
             >
-              {category}
+              {category.nombre}
             </li>
           ))}
           {filteredCategories.length === 0 && (
