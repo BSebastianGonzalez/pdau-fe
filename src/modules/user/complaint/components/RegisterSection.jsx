@@ -4,41 +4,68 @@ import TextField from "../../../../components/TextField";
 import CategorySelector from "./CategorySelector";
 import FileUploader from "./FileUploader";
 import Button from "../../../../components/Button";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ComplaintService from "../../../../services/ComplaintService"; // Importar el servicio
 
 const validateText = (text) => {
-  // Asegúrate de que el texto tenga al menos 3 caracteres y no contenga caracteres especiales
   const regex = /^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑ]+$/;
   return text.trim().length >= 3 && regex.test(text);
 };
 
-const handleFilesChange = (files) => {
-  console.log("Archivos seleccionados:", files);
-};
-
 const RegisterSection = () => {
-  const [categories, setCategories] = useState([]); // Estado para las categorías
-  const [loading, setLoading] = useState(true); // Estado para mostrar el estado de carga
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [files, setFiles] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Obtener las categorías desde el endpoint
     const fetchCategories = async () => {
       try {
         const data = await ComplaintService.getAllCategories();
-        setCategories(data); // Actualizar las categorías
+        setCategories(data);
       } catch (error) {
         console.error("Error al obtener las categorías:", error);
       } finally {
-        setLoading(false); // Finalizar el estado de carga
+        setLoading(false);
       }
     };
 
     fetchCategories();
   }, []);
 
-  const handleCategorySelect = (category) => {
-    console.log("Categoría seleccionada:", category);
+  const handleCategorySelect = (categories) => {
+    setSelectedCategories(categories);
+  };
+
+  const handleFilesChange = (files) => {
+    setFiles(files);
+  };
+
+  const handleSubmit = async () => {
+    if (!title || !description || selectedCategories.length === 0) {
+      alert("Por favor, complete todos los campos obligatorios.");
+      return;
+    }
+
+    const complaintData = {
+      titulo: title,
+      descripcion: description,
+      categoriaIds: selectedCategories.map((category) => category.id),
+    };
+    
+    console.log("Enviando datos:", complaintData);
+    try {
+      
+      const response = await ComplaintService.createComplaint(complaintData);
+      const token = response.token; // Asume que el backend devuelve un token
+      navigate("/finished_register", { state: { token } }); // Redirige con el token
+    } catch (error) {
+      console.error("Error al registrar la denuncia:", error);
+      alert("Hubo un error al registrar la denuncia. Inténtelo nuevamente.");
+    }
   };
 
   return (
@@ -49,7 +76,7 @@ const RegisterSection = () => {
       <p className="text-left text-gray-600 mt-2 ml-4">
         Los campos obligatorios se indican con{" "}
         <img
-          src="img/obligatory.svg" // Cambia esta ruta por la correcta
+          src="img/obligatory.svg"
           alt="Campo obligatorio"
           className="inline-block w-6 h-6"
         />
@@ -59,7 +86,7 @@ const RegisterSection = () => {
       <div className="flex flex-col md:flex-row items-start gap-4 mt-8">
         <div className="flex items-center gap-2">
           <img
-            src="img/obligatory.svg" // Cambia esta ruta por la correcta
+            src="img/obligatory.svg"
             alt="Campo obligatorio"
             className="w-6 h-6"
           />
@@ -69,6 +96,8 @@ const RegisterSection = () => {
           placeholder="Escribe un título corto, claro y conciso"
           required
           validate={validateText}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
       </div>
 
@@ -76,7 +105,7 @@ const RegisterSection = () => {
       <div className="flex flex-col md:flex-row items-start gap-4 mt-4">
         <div className="flex items-center gap-2">
           <img
-            src="img/obligatory.svg" // Cambia esta ruta por la correcta
+            src="img/obligatory.svg"
             alt="Campo obligatorio"
             className="w-6 h-6"
           />
@@ -87,6 +116,8 @@ const RegisterSection = () => {
           height="h-32"
           required
           validate={validateText}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
       </div>
 
@@ -94,7 +125,7 @@ const RegisterSection = () => {
       <div className="flex flex-col md:flex-row items-start gap-4 mt-4">
         <div className="flex items-center gap-2">
           <img
-            src="img/obligatory.svg" // Cambia esta ruta por la correcta
+            src="img/obligatory.svg"
             alt="Campo obligatorio"
             className="w-6 h-6"
           />
@@ -113,44 +144,37 @@ const RegisterSection = () => {
       {/* Campo de Subir Archivo de Evidencia */}
       <div className="flex flex-col md:flex-row items-start gap-4 mt-4">
         <div className="flex items-center gap-2">
-          {/* Imagen invisible */}
           <img
-            src="img/obligatory.svg" // Cambia esta ruta por la correcta
+            src="img/obligatory.svg"
             alt="Campo obligatorio"
             className="w-6 h-6"
             style={{ visibility: "hidden" }}
           />
           <Tag text="Subir archivo de evidencia" />
         </div>
-
         <FileUploader onFilesChange={handleFilesChange} />
       </div>
+
       {/* Botones de acción */}
       <div className="flex justify-center gap-4 mt-8">
         <Button
           text="Enviar denuncia"
           className="bg-red-600 hover:bg-red-700 text-white"
-          onClick={() => console.log("Enviar denuncia")}
+          onClick={handleSubmit}
         />
-
-        <Link
-          to="/"
-          onClick={(e) => {
+        <Button
+          text="Cancelar"
+          className="bg-red-600 hover:bg-red-700 text-white"
+          onClick={() => {
             if (
-              !window.confirm(
+              window.confirm(
                 "¿Estás seguro de que deseas cancelar la denuncia?"
               )
             ) {
-              e.preventDefault(); // Evita la redirección si el usuario cancela
+              navigate("/");
             }
           }}
-        >
-          <Button
-            text="Cancelar"
-            className="bg-red-600 hover:bg-red-700 text-white"
-            onClick={() => console.log("Cancelar")}
-          />
-        </Link>
+        />
       </div>
     </section>
   );

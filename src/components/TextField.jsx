@@ -5,9 +5,10 @@ const TextField = ({
   width = "w-full", 
   height = "h-12", 
   required = false, 
-  validate = null // Función de validación personalizada
+  validate = null, 
+  value,                // <-- Aceptar value como prop
+  onChange              // <-- Aceptar onChange como prop
 }) => {
-  const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
   const handleBlur = () => {
@@ -24,8 +25,8 @@ const TextField = ({
     <div className="w-full">
       <textarea
         placeholder={placeholder}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={value}                 // <-- Usar valor del padre
+        onChange={onChange}          // <-- Llamar a onChange del padre
         onBlur={handleBlur}
         className={`${width} ${height} p-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-md resize-none overflow-auto focus:outline-none focus:ring-2 ${error ? 'focus:ring-red-500' : 'focus:ring-blue-500'}`}
       />
@@ -33,5 +34,6 @@ const TextField = ({
     </div>
   );
 };
+
 
 export default TextField;

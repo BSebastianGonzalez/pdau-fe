@@ -4,7 +4,7 @@ import './App.css';
 import MainPage from './pages/user/MainPage';
 import ComplaintInfo from './pages/complaint/ComplaintInfo';
 import ComplaintRegister from './pages/complaint/ComplaintRegister';
-import TestPage from './pages/TestPage';
+import ComplaintCreated from './pages/complaint/ComplaintCreated';
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<MainPage />} />
         <Route path="/complaint" element={<ComplaintInfo />} />
         <Route path="/register" element={<ComplaintRegister />} />
-        <Route path="/test" element={<TestPage />} />
+        <Route path="/finished_register" element={<ComplaintCreated/>} />"
         {/* Puedes agregar más rutas aquí */}
       </Routes>
     </Router>
