@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Tag from "../../../../components/Tag";
 import TextField from "../../../../components/TextField";
 import CategorySelector from "./CategorySelector";
 import FileUploader from "./FileUploader";
 import Button from "../../../../components/Button";
 import { Link } from "react-router-dom";
+import ComplaintService from "../../../../services/ComplaintService"; // Importar el servicio
 
 const validateText = (text) => {
   // Asegúrate de que el texto tenga al menos 3 caracteres y no contenga caracteres especiales
@@ -16,9 +17,26 @@ const handleFilesChange = (files) => {
   console.log("Archivos seleccionados:", files);
 };
 
-const categories = ["Acoso", "Discriminación", "Fraude", "Otro"]; // Ejemplo de categorías
-
 const RegisterSection = () => {
+  const [categories, setCategories] = useState([]); // Estado para las categorías
+  const [loading, setLoading] = useState(true); // Estado para mostrar el estado de carga
+
+  useEffect(() => {
+    // Obtener las categorías desde el endpoint
+    const fetchCategories = async () => {
+      try {
+        const data = await ComplaintService.getAllCategories();
+        setCategories(data); // Actualizar las categorías
+      } catch (error) {
+        console.error("Error al obtener las categorías:", error);
+      } finally {
+        setLoading(false); // Finalizar el estado de carga
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const handleCategorySelect = (category) => {
     console.log("Categoría seleccionada:", category);
   };
@@ -82,11 +100,16 @@ const RegisterSection = () => {
           />
           <Tag text="Seleccionar categoría" />
         </div>
-        <CategorySelector
-          categories={categories}
-          onSelect={handleCategorySelect}
-        />
+        {loading ? (
+          <p>Cargando categorías...</p>
+        ) : (
+          <CategorySelector
+            categories={categories}
+            onSelect={handleCategorySelect}
+          />
+        )}
       </div>
+
       {/* Campo de Subir Archivo de Evidencia */}
       <div className="flex flex-col md:flex-row items-start gap-4 mt-4">
         <div className="flex items-center gap-2">
