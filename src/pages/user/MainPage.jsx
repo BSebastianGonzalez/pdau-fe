@@ -33,11 +33,13 @@ const MainPage = () => {
             </p>
           </div>
           <div className="w-100 text-center"> {/* Contenedor con ancho fijo */}
+            <Link to="/consult">
             <HomeButton
               text="Consultar Estado De Denuncia Anónima"
               imageSrc="img/status_consult.png"
               onClick={() => console.log("Consultar Estado De Denuncia Anónima")}
             />
+            </Link>
             <p className="text-base font-bold text-black mt-2">
               Usa tu token de seguimiento para conocer el estado y próximos pasos de tu denuncia.
             </p>
