@@ -7,6 +7,7 @@ import ComplaintRegister from './pages/complaint/ComplaintRegister';
 import ComplaintCreated from './pages/complaint/ComplaintCreated';
 import ComplaintConsult from './pages/complaint/ComplaintConsult';
 import ConsultResponse from './pages/complaint/ConsultResponse';
+import LoginPage from './pages/admin/LoginPage';
 function App() {
   return (
     <Router>
@@ -18,6 +19,7 @@ function App() {
         <Route path="/finished_register" element={<ComplaintCreated/>} />"
         <Route path="/consult" element={<ComplaintConsult />} />
         <Route path="/consult_response" element={<ConsultResponse />} />
+        <Route path="/admin_login" element={<LoginPage />} />"
         {/* Puedes agregar más rutas aquí */}
       </Routes>
     </Router>
