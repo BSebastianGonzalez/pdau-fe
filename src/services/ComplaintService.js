@@ -23,6 +23,18 @@ const ComplaintService = {
     }
   },
 
+  // Obtener una denuncia por token
+  getComplaintByToken: async (token) => {
+    try {
+      const response = await axios.get(`/denuncias/token/${token}`);
+      console.log("Respuesta de la API:", response.data); // Depuración 
+      return response.data;
+    } catch (error) {
+      console.error(`Error al obtener la denuncia con el token ${token}:`, error);
+      throw error;
+    }
+  },
+
   // Crear una nueva denuncia
   createComplaint: async (complaintData) => {
     try {
