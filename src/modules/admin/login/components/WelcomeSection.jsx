@@ -1,9 +1,11 @@
 import React from "react";
-import { useLocation } from "react-router-dom"; // Importar useLocation
 
 const WelcomeSection = () => {
-  const location = useLocation(); // Obtener el estado de la navegación
-  const adminName = location.state?.adminName || "Administrador"; // Obtener el nombre del administrador
+  // Obtener los datos del administrador desde localStorage
+  const adminData = JSON.parse(localStorage.getItem("admin"));
+  
+  // Si no hay datos del administrador, usamos un nombre por defecto
+  const adminName = adminData?.nombre || "Administrador";
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">

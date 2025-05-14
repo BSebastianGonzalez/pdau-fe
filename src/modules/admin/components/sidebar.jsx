@@ -1,19 +1,29 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Sidebar = () => {
-  const [selectedSection, setSelectedSection] = useState("Inicio"); // Estado para la sección seleccionada
+const Sidebar = ({ adminData }) => {
+  const [selectedSection, setSelectedSection] = useState("Inicio");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSectionClick = (section) => {
-    setSelectedSection(section); // Actualizar la sección seleccionada
+    setSelectedSection(section);
     if (section === "Inicio") {
-      navigate("/admin"); // Navegar a la página de inicio
+      navigate("/admin_main", { state: { adminData } }); // ✅ Mantener datos
     }
   };
 
   const handleLogout = () => {
-    navigate("/"); // Navegar a la página de inicio de sesión
+    navigate("/admin_login");
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleNavigateToData = () => {
+    setSelectedSection("Ver mis datos");
+    navigate("/data", { state: { adminData } }); // ✅ Enviar datos correctamente
   };
 
   return (
@@ -22,11 +32,7 @@ const Sidebar = () => {
       <div className="flex flex-col items-center">
         {/* Logo */}
         <div className="mb-8 flex items-center justify-center">
-          <img
-            src="img/ufps.png"
-            alt="UFPS Logo"
-            className="w-22 h-auto"
-          />
+          <img src="img/ufps.png" alt="UFPS Logo" className="w-16 h-auto" />
         </div>
 
         {/* Sección de Inicio */}
@@ -38,6 +44,39 @@ const Sidebar = () => {
         >
           <img src="img/home-alt.svg" alt="Inicio" className="w-6 h-6" />
           <span className="text-lg font-medium">Inicio</span>
+        </div>
+
+        {/* Sección Mis datos */}
+        <div className="w-full">
+          <div
+            className="w-full px-4 py-3 flex items-center gap-4 cursor-pointer hover:bg-white/20"
+            onClick={toggleDropdown}
+          >
+            <img src="img/personal_data.svg" alt="Mis datos" className="w-6 h-6" />
+            <span className="text-lg font-medium">Mis datos</span>
+            <span
+              className={`ml-auto transform transition-transform ${
+                isDropdownOpen ? "rotate-180" : "rotate-0"
+              }`}
+              style={{ color: "black" }}
+            >
+              ▼
+            </span>
+          </div>
+          <div
+            className={`pl-8 overflow-hidden transition-all duration-300 ease-in-out ${
+              isDropdownOpen ? "max-h-40" : "max-h-0"
+            }`}
+          >
+            <div
+              className={`w-full px-4 py-2 flex items-center gap-4 cursor-pointer hover:bg-white/20 ${
+                selectedSection === "Ver mis datos" ? "bg-white/40 rounded-lg" : ""
+              }`}
+              onClick={handleNavigateToData}
+            >
+              <span className="text-base">Ver mis datos</span>
+            </div>
+          </div>
         </div>
       </div>
 
