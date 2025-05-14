@@ -3,14 +3,18 @@ import axios from "../api/axios";
 const AdminService = {
   // Iniciar sesión
   login: async (correo, contrasenia) => {
-    try {
-      const response = await axios.post("/admins/login", { correo, contrasenia });
-      return response.data;
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      throw error;
-    }
-  },
+  try {
+    const response = await axios.post("/admins/login", { correo, contrasenia });
+
+    localStorage.setItem("admin", JSON.stringify(response.data));
+
+    return response.data;
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error);
+    throw error;
+  }
+},
+
 
   // Obtener todos los administradores
   getAllAdmins: async () => {

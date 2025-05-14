@@ -16,8 +16,12 @@ const CredentialsSection = () => {
 
       if (response.success) {
         console.log("Inicio de sesión exitoso:", response);
-        // Pasar el nombre del administrador al redirigir
-        navigate("/admin_main", { state: { adminName: response.admin.nombre } });
+
+        // Guardar los datos del administrador en localStorage
+        localStorage.setItem("admin", JSON.stringify(response.admin));
+
+        // Redirigir al usuario a la página principal
+        navigate("/admin_main");
       } else {
         setError(response.message || "Error al iniciar sesión. Verifica tus credenciales.");
       }
