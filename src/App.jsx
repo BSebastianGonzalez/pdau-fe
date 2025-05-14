@@ -11,6 +11,7 @@ import LoginPage from './pages/admin/LoginPage';
 import AdminPage from './pages/admin/AdminPage';
 import DataPage from './pages/admin/DataPage';
 import DataUpdatePage from './pages/admin/DataUpdatePage';
+import ViewComplaints from './pages/admin/ViewComplaints';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/admin_main" element={<AdminPage />} />
         <Route path="/data" element={<DataPage />} />
         <Route path="/data_update" element={<DataUpdatePage />} />
+        <Route path="/read_complaint" element={<ViewComplaints />} />
         {/* Puedes agregar más rutas aquí */}
       </Routes>
     </Router>

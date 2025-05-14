@@ -99,6 +99,39 @@ const ComplaintService = {
       throw error;
     }
   },
+
+  // Obtener denuncias archivadas
+  getArchivedComplaints: async () => {
+    try {
+      const response = await axios.get("/denuncias/archivadas");
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener las denuncias archivadas:", error);
+      throw error;
+    }
+  },
+
+  // Obtener denuncias no archivadas
+  getUnarchivedComplaints: async () => {
+    try {
+      const response = await axios.get("/denuncias/no-archivadas");
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener las denuncias no archivadas:", error);
+      throw error;
+    }
+  },
+
+  // Alternar el estado de archivado de una denuncia
+  toggleArchivedStatus: async (id) => {
+    try {
+      const response = await axios.put(`/denuncias/${id}/toggle-archivado`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al alternar el estado de archivado de la denuncia con ID ${id}:`, error);
+      throw error;
+    }
+  },
 };
 
 export default ComplaintService;

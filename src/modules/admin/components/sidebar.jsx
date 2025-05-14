@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 const Sidebar = ({ adminData }) => {
   const [selectedSection, setSelectedSection] = useState("Inicio");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isComplaintDropdownOpen, setIsComplaintDropdownOpen] = useState(false); // Estado para la nueva lista desplegable
   const navigate = useNavigate();
 
   const handleSectionClick = (section) => {
     setSelectedSection(section);
     if (section === "Inicio") {
-      navigate("/admin_main", { state: { adminData } }); // ✅ Mantener datos
+      navigate("/admin_main", { state: { adminData } });
     }
   };
 
@@ -21,9 +22,18 @@ const Sidebar = ({ adminData }) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const toggleComplaintDropdown = () => {
+    setIsComplaintDropdownOpen(!isComplaintDropdownOpen);
+  };
+
   const handleNavigateToData = () => {
     setSelectedSection("Ver mis datos");
-    navigate("/data", { state: { adminData } }); // ✅ Enviar datos correctamente
+    navigate("/data", { state: { adminData } });
+  };
+
+  const handleNavigateToComplaint = () => {
+    setSelectedSection("Ver denuncias anónimas");
+    navigate("/read_complaint", { state: { adminData } });
   };
 
   return (
@@ -75,6 +85,46 @@ const Sidebar = ({ adminData }) => {
               onClick={handleNavigateToData}
             >
               <span className="text-base">Ver mis datos</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Sección Denuncias anónimas */}
+        <div className="w-full">
+          <div
+            className="w-full px-4 py-3 flex items-center gap-4 cursor-pointer hover:bg-white/20"
+            onClick={toggleComplaintDropdown}
+          >
+            <img src="img/complaint.svg" alt="Denuncias anónimas" className="w-6 h-6" />
+            <span className="text-lg font-medium">Denuncias anónimas</span>
+            <span
+              className={`ml-auto transform transition-transform ${
+                isComplaintDropdownOpen ? "rotate-180" : "rotate-0"
+              }`}
+              style={{ color: "black" }}
+            >
+              ▼
+            </span>
+          </div>
+          <div
+            className={`pl-8 overflow-hidden transition-all duration-300 ease-in-out ${
+              isComplaintDropdownOpen ? "max-h-40" : "max-h-0"
+            }`}
+          >
+            <div
+              className={`w-full px-4 py-2 flex items-center gap-4 cursor-pointer hover:bg-white/20 ${
+                selectedSection === "Ver denuncias anónimas" ? "bg-white/40 rounded-lg" : ""
+              }`}
+              onClick={handleNavigateToComplaint}
+            >
+              <span className="text-base">Ver denuncias anónimas</span>
+            </div>
+            <div
+              className={`w-full px-4 py-2 flex items-center gap-4 cursor-pointer hover:bg-white/20 ${
+                selectedSection === "Denuncias archivadas" ? "bg-white/40 rounded-lg" : ""
+              }`}
+            >
+              <span className="text-base">Denuncias archivadas</span>
             </div>
           </div>
         </div>
