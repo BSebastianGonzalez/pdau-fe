@@ -62,7 +62,11 @@ const Sidebar = ({ adminData }) => {
             className="w-full px-4 py-3 flex items-center gap-4 cursor-pointer hover:bg-white/20"
             onClick={toggleDropdown}
           >
-            <img src="img/personal_data.svg" alt="Mis datos" className="w-6 h-6" />
+            <img
+              src="img/personal_data.svg"
+              alt="Mis datos"
+              className="w-6 h-6"
+            />
             <span className="text-lg font-medium">Mis datos</span>
             <span
               className={`ml-auto transform transition-transform ${
@@ -80,7 +84,9 @@ const Sidebar = ({ adminData }) => {
           >
             <div
               className={`w-full px-4 py-2 flex items-center gap-4 cursor-pointer hover:bg-white/20 ${
-                selectedSection === "Ver mis datos" ? "bg-white/40 rounded-lg" : ""
+                selectedSection === "Ver mis datos"
+                  ? "bg-white/40 rounded-lg"
+                  : ""
               }`}
               onClick={handleNavigateToData}
             >
@@ -95,7 +101,11 @@ const Sidebar = ({ adminData }) => {
             className="w-full px-4 py-3 flex items-center gap-4 cursor-pointer hover:bg-white/20"
             onClick={toggleComplaintDropdown}
           >
-            <img src="img/complaint.svg" alt="Denuncias anónimas" className="w-6 h-6" />
+            <img
+              src="img/complaint.svg"
+              alt="Denuncias anónimas"
+              className="w-6 h-6"
+            />
             <span className="text-lg font-medium">Denuncias anónimas</span>
             <span
               className={`ml-auto transform transition-transform ${
@@ -113,7 +123,9 @@ const Sidebar = ({ adminData }) => {
           >
             <div
               className={`w-full px-4 py-2 flex items-center gap-4 cursor-pointer hover:bg-white/20 ${
-                selectedSection === "Ver denuncias anónimas" ? "bg-white/40 rounded-lg" : ""
+                selectedSection === "Ver denuncias anónimas"
+                  ? "bg-white/40 rounded-lg"
+                  : ""
               }`}
               onClick={handleNavigateToComplaint}
             >
@@ -121,8 +133,14 @@ const Sidebar = ({ adminData }) => {
             </div>
             <div
               className={`w-full px-4 py-2 flex items-center gap-4 cursor-pointer hover:bg-white/20 ${
-                selectedSection === "Denuncias archivadas" ? "bg-white/40 rounded-lg" : ""
+                selectedSection === "Denuncias archivadas"
+                  ? "bg-white/40 rounded-lg"
+                  : ""
               }`}
+              onClick={() => {
+                setSelectedSection("Denuncias archivadas");
+                navigate("/archived_complaints", { state: { adminData } });
+              }}
             >
               <span className="text-base">Denuncias archivadas</span>
             </div>
@@ -135,7 +153,11 @@ const Sidebar = ({ adminData }) => {
         className="w-full px-4 py-3 flex items-center gap-4 cursor-pointer hover:bg-white/20"
         onClick={handleLogout}
       >
-        <img src="img/cerrar-sesion.png" alt="Cerrar sesión" className="w-6 h-6" />
+        <img
+          src="img/cerrar-sesion.png"
+          alt="Cerrar sesión"
+          className="w-6 h-6"
+        />
         <span className="text-lg font-medium">Cerrar sesión</span>
       </div>
     </div>

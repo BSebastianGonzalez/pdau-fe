@@ -3,7 +3,7 @@ import ComplaintService from "../../../services/ComplaintService";
 import ListContainer from "../../../components/ListContainer";
 import Tag from "../../../components/Tag";
 
-const ComplaintsList = () => {
+const ArchivedSection = () => {
   const [complaints, setComplaints] = useState([]);
   const [filteredComplaints, setFilteredComplaints] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -17,7 +17,7 @@ const ComplaintsList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const complaintsData = await ComplaintService.getUnarchivedComplaints();
+        const complaintsData = await ComplaintService.getArchivedComplaints();
         const categoriesData = await ComplaintService.getAllCategories();
         setComplaints(complaintsData);
         setFilteredComplaints(complaintsData);
@@ -92,7 +92,7 @@ const ComplaintsList = () => {
   return (
     <div className="p-8">
       <h1 className="text-4xl font-bold mb-6 text-center">
-        Denuncias anónimas
+        Denuncias archivadas
       </h1>
 
       <div className="mb-4 flex justify-between items-center">
@@ -227,4 +227,4 @@ const ComplaintsList = () => {
   );
 };
 
-export default ComplaintsList;
+export default ArchivedSection;
