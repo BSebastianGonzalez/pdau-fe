@@ -45,11 +45,13 @@ const MainPage = () => {
             </p>
           </div>
           <div className="w-100 text-center"> {/* Contenedor con ancho fijo */}
+            <Link to="/law_frame">
             <HomeButton
               text="Consultar Marco Legal"
               imageSrc="img/law_consult.png"
               onClick={() => console.log("Consultar Marco Legal")}
             />
+            </Link>
             <p className="text-base font-bold text-black mt-2">
               Accede a la normativa vigente, busca información por palabras clave o descarga el documento completo.
             </p>

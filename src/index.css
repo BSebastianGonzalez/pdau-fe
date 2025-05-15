@@ -35,3 +35,7 @@
 .custom-button:hover {
   background-color: #b71c1c; /* Rojo más oscuro */
 }
+
+.hidden {
+  display: none;
+}
