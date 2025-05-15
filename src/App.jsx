@@ -11,7 +11,8 @@ import LoginPage from './pages/admin/LoginPage';
 import AdminPage from './pages/admin/AdminPage';
 import DataPage from './pages/admin/DataPage';
 import DataUpdatePage from './pages/admin/DataUpdatePage';
-import ViewComplaints from './pages/admin/ViewComplaints';
+import ViewComplaints from './pages/complaint/ViewComplaints';
+import ViewArchivedComplaints from './pages/complaint/ViewArchivedComplaints';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/data" element={<DataPage />} />
         <Route path="/data_update" element={<DataUpdatePage />} />
         <Route path="/read_complaint" element={<ViewComplaints />} />
+        <Route path="/archived_complaints" element={<ViewArchivedComplaints />} />
         {/* Puedes agregar más rutas aquí */}
       </Routes>
     </Router>
