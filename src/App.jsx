@@ -13,6 +13,7 @@ import DataPage from './pages/admin/DataPage';
 import DataUpdatePage from './pages/admin/DataUpdatePage';
 import ViewComplaints from './pages/complaint/ViewComplaints';
 import ViewArchivedComplaints from './pages/complaint/ViewArchivedComplaints';
+import LawFrame from './pages/user/LawFrame';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/finished_register" element={<ComplaintCreated/>} />"
         <Route path="/consult" element={<ComplaintConsult />} />
         <Route path="/consult_response" element={<ConsultResponse />} />
+        <Route path="/law_frame" element={<LawFrame />} />
         <Route path="/admin_login" element={<LoginPage />} />"
         <Route path="/admin_main" element={<AdminPage />} />
         <Route path="/data" element={<DataPage />} />
