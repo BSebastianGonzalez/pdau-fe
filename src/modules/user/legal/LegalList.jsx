@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import ListContainer from "../../../components/ListContainer";
 import Button from "../../../components/Button";
-import { Link } from "react-router-dom";
 
 const LegalList = () => {
   const laws = [
@@ -112,7 +112,13 @@ const LegalList = () => {
   const [filteredLaws, setFilteredLaws] = useState(laws);
   const [keyword, setKeyword] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState(3);
-  const [currentPage, setCurrentPage] = useState(1); // 👉 NUEVO estado
+  const [currentPage, setCurrentPage] = useState(1); 
+
+  const navigate = useNavigate();
+
+  const handleRowClick = (lawId) => {
+    navigate(`/${lawId}`);
+  };
 
   // Filtrado
   const handleFilter = (e) => {
@@ -186,7 +192,11 @@ const LegalList = () => {
             </thead>
             <tbody>
               {currentLaws.map((law) => (
-                <tr key={law.id} className="hover:bg-gray-100">
+                <tr
+                  key={law.id}
+                  className="hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleRowClick(law.id)}
+                >
                   <td
                     className="px-4 py-2 font-bold truncate"
                     style={{
