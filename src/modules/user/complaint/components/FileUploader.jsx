@@ -7,8 +7,11 @@ const FileUploader = ({ onFilesChange }) => {
     const selectedFiles = Array.from(e.target.files).filter((file) =>
       file.name.endsWith(".pdf")
     );
-    setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-    onFilesChange([...files, ...selectedFiles]); // Notifica al padre los archivos seleccionados
+    setFiles(selectedFiles);
+    onFilesChange(selectedFiles);
+
+    // Limpia el input para permitir subir el mismo archivo de nuevo si se desea
+    e.target.value = null;
   };
 
   const handleRemoveFile = (index) => {
@@ -21,21 +24,22 @@ const FileUploader = ({ onFilesChange }) => {
     <div className="w-full">
       <div className="border border-gray-300 rounded-md p-4">
         <ul className="space-y-2">
-          {files.map((file, index) => (
-            <li
-              key={index}
-              className="flex justify-between items-center bg-gray-100 p-2 rounded-md"
-            >
-              <span>{file.name}</span>
-              <button
-                onClick={() => handleRemoveFile(index)}
-                className="text-red-500 hover:underline"
+          {files.length > 0 ? (
+            files.map((file, index) => (
+              <li
+                key={index}
+                className="flex justify-between items-center bg-gray-100 p-2 rounded-md"
               >
-                Eliminar
-              </button>
-            </li>
-          ))}
-          {files.length === 0 && (
+                <span>{file.name}</span>
+                <button
+                  onClick={() => handleRemoveFile(index)}
+                  className="text-red-500 hover:underline"
+                >
+                  Eliminar
+                </button>
+              </li>
+            ))
+          ) : (
             <li className="text-gray-500">No se han subido archivos</li>
           )}
         </ul>
@@ -48,6 +52,7 @@ const FileUploader = ({ onFilesChange }) => {
             accept=".pdf"
             onChange={handleFileChange}
             className="hidden"
+            multiple
           />
         </label>
       </div>

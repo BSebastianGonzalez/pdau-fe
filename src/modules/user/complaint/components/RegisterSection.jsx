@@ -42,6 +42,7 @@ const RegisterSection = () => {
 
   const handleFilesChange = (files) => {
     setFiles(files);
+    console.log("Archivos seleccionados:", files);
   };
 
   const handleSubmit = async () => {
@@ -55,13 +56,26 @@ const RegisterSection = () => {
       descripcion: description,
       categoriaIds: selectedCategories.map((category) => category.id),
     };
-    
+
     console.log("Enviando datos:", complaintData);
     try {
-      
+      // 1. Crear la denuncia
       const response = await ComplaintService.createComplaint(complaintData);
       const token = response.token; // Asume que el backend devuelve un token
-      navigate("/finished_register", { state: { token } }); // Redirige con el token
+      const denunciaId = response.id; // Asegúrate que el backend devuelve el id de la denuncia
+
+      console.log("Archivos en estado actual:", files);
+
+      // 2. Subir archivos de evidencia si hay
+      if (files && files.length > 0 && denunciaId) {
+        for (const file of files) {
+          console.log("Enviando archivo:", file, "con denunciaId:", denunciaId);
+          await ComplaintService.uploadFile(file, denunciaId);
+        }
+      }
+
+      // 3. Redirigir
+      navigate("/finished_register", { state: { token } });
     } catch (error) {
       console.error("Error al registrar la denuncia:", error);
       alert("Hubo un error al registrar la denuncia. Inténtelo nuevamente.");

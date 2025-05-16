@@ -132,6 +132,35 @@ const ComplaintService = {
       throw error;
     }
   },
+
+  uploadFile: async (file, denunciaId) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("denunciaId", denunciaId);
+
+      const response = await axios.post("/evidencia", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error al subir archivo:", error);
+      throw error;
+    }
+  },
+
+  // Obtener archivos por denunciaId
+  getFilesByComplaintId: async (denunciaId) => {
+    try {
+      const response = await axios.get(`/archivos/${denunciaId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al obtener archivos de la denuncia con ID ${denunciaId}:`, error);
+      throw error;
+    }
+  },
 };
 
 export default ComplaintService;
