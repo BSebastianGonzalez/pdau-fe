@@ -27,11 +27,13 @@ const ComplaintResponse = () => {
       <h1 className="text-5xl font-bold text-center">
         Consultar estado de denuncia anónima
       </h1>
-      <div className="mt-10 w-full max-w-md text-center">
+      <div className="mt-20 w-full max-w-md text-center">
         <h2 className="text-xl font-bold">Denuncia anónima</h2>
         <p className="text-lg mt-2">{complaint.titulo}</p>
-        <h2 className="text-xl font-bold mt-6">El estado actual de la denuncia es:</h2>
-        <StatusTag text={complaint.estadoNombre} />
+        <h2 className="text-xl font-bold mt-10">El estado actual de la denuncia es:</h2>
+        <div className="mt-4 mb-2">
+          <StatusTag text={complaint.estado?.nombre || complaint.estadoNombre} />
+        </div>
       </div>
       <div className="flex gap-4 mt-6">
         <Button

@@ -7,10 +7,14 @@ const ComplaintsList = () => {
   const [complaints, setComplaints] = useState([]);
   const [filteredComplaints, setFilteredComplaints] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [departamentos, setDepartamentos] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [selectedCategoryName, setSelectedCategoryName] = useState("");
+  const [selectedDepartamentoId, setSelectedDepartamentoId] = useState("");
+  const [selectedDepartamentoName, setSelectedDepartamentoName] = useState("");
   const [keyword, setKeyword] = useState("");
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
@@ -19,9 +23,11 @@ const ComplaintsList = () => {
       try {
         const complaintsData = await ComplaintService.getUnarchivedComplaints();
         const categoriesData = await ComplaintService.getAllCategories();
+        const departamentosData = await ComplaintService.getAllDepartamentos();
         setComplaints(complaintsData);
         setFilteredComplaints(complaintsData);
         setCategories(categoriesData);
+        setDepartamentos(departamentosData);
       } catch (error) {
         console.error("Error al obtener datos:", error);
       }
@@ -40,17 +46,23 @@ const ComplaintsList = () => {
   };
 
   const toggleFilterModal = () => {
-    setIsFilterModalOpen(!isFilterModalOpen);
+    if (!isFilterModalOpen) {
+      setShowModal(true);
+      setTimeout(() => setIsFilterModalOpen(true), 10); // Espera para activar la animación
+    } else {
+      setIsFilterModalOpen(false);
+      setTimeout(() => setShowModal(false), 300); // Espera a que termine la animación
+    }
   };
 
   const applyFilters = async () => {
     try {
       let filtered = [];
 
-      if (selectedCategoryId) {
-        filtered = await ComplaintService.getComplaintsByCategory(
-          selectedCategoryId
-        );
+      if (selectedDepartamentoId) {
+        filtered = await ComplaintService.getComplaintsByDepartment(selectedDepartamentoId);
+      } else if (selectedCategoryId) {
+        filtered = await ComplaintService.getComplaintsByCategory(selectedCategoryId);
       } else {
         filtered = complaints;
       }
@@ -75,6 +87,12 @@ const ComplaintsList = () => {
     setFilteredComplaints(complaints);
   };
 
+  const clearDepartamentoFilter = () => {
+    setSelectedDepartamentoId("");
+    setSelectedDepartamentoName("");
+    setFilteredComplaints(complaints);
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentComplaints = filteredComplaints.slice(
@@ -96,12 +114,20 @@ const ComplaintsList = () => {
       </h1>
 
       <div className="mb-4 flex justify-between items-center">
-        {selectedCategoryName && (
-          <Tag
-            text={`Categoría: ${selectedCategoryName}`}
-            onRemove={clearCategoryFilter}
-          />
-        )}
+        <div className="flex gap-2">
+          {selectedCategoryName && (
+            <Tag
+              text={`Categoría: ${selectedCategoryName}`}
+              onRemove={clearCategoryFilter}
+            />
+          )}
+          {selectedDepartamentoName && (
+            <Tag
+              text={`Departamento: ${selectedDepartamentoName}`}
+              onRemove={clearDepartamentoFilter}
+            />
+          )}
+        </div>
         <button
           onClick={toggleFilterModal}
           className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-black rounded-lg shadow hover:bg-gray-300"
@@ -111,11 +137,42 @@ const ComplaintsList = () => {
         </button>
       </div>
 
-      {isFilterModalOpen && (
+      {showModal && (
         <div className="fixed inset-0 flex justify-center items-center z-50 backdrop-blur-sm bg-white/10">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+          <div
+            className={`bg-white p-6 rounded-lg shadow-lg w-96 transition-all duration-300
+              ${isFilterModalOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
+          >
             <h2 className="text-2xl font-bold mb-4">Filtrar denuncias</h2>
             <div className="mb-4">
+              <label
+                htmlFor="department"
+                className="block text-lg font-medium mb-2"
+              >
+                Departamento
+              </label>
+              <select
+                id="department"
+                value={selectedDepartamentoId}
+                onChange={(e) => {
+                  const selectedId = e.target.value;
+                  const selectedName =
+                    departamentos.find((dep) => String(dep.id) === selectedId)
+                      ?.nombre || "";
+                  setSelectedDepartamentoId(selectedId);
+                  setSelectedDepartamentoName(selectedName);
+                }}
+                className="w-full px-3 py-2 border rounded-lg"
+              >
+                <option value="">Todos los departamentos</option>
+                {departamentos.map((dep) => (
+                  <option key={dep.id} value={dep.id}>
+                    {dep.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4 overflow-visible">
               <label
                 htmlFor="category"
                 className="block text-lg font-medium mb-2"

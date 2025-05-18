@@ -4,9 +4,7 @@ const FileUploader = ({ onFilesChange }) => {
   const [files, setFiles] = useState([]);
 
   const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files).filter((file) =>
-      file.name.endsWith(".pdf")
-    );
+    const selectedFiles = Array.from(e.target.files);
     setFiles(selectedFiles);
     onFilesChange(selectedFiles);
 
@@ -49,7 +47,6 @@ const FileUploader = ({ onFilesChange }) => {
           </span>
           <input
             type="file"
-            accept=".pdf"
             onChange={handleFileChange}
             className="hidden"
             multiple
