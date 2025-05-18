@@ -39,3 +39,12 @@
 .hidden {
   display: none;
 }
+
+@keyframes pulse-bar {
+  0% { width: 0%; }
+  50% { width: 80%; }
+  100% { width: 60%; }
+}
+.animate-pulse-bar {
+  animation: pulse-bar 1.5s infinite;
+}

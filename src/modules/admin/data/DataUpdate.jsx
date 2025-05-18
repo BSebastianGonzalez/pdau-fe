@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Button from "../../../components/Button"; // Importar el componente Button
-import AdminService from "../../../services/AdminService"; // Importar el servicio AdminService
+import Button from "../../../components/Button";
+import AdminService from "../../../services/AdminService";
 
 const DataUpdate = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Obtener los datos del administrador desde el estado de navegación o localStorage
   const adminData = location.state?.adminData ||
     JSON.parse(localStorage.getItem("admin")) || {
-      id: 1, // Asegúrate de que el ID esté disponible
+      id: 1,
       nombre: "Juan Diego",
       apellido: "Castañeda Bohórquez",
       correo: "juandiegocb@ufps.edu.co",
@@ -18,19 +17,20 @@ const DataUpdate = () => {
       direccion: "Av 1a Calle 28",
     };
 
-  // Estado para los datos del formulario
   const [formData, setFormData] = useState({
     cedula: adminData.cedula || "",
     nombre: adminData.nombre,
     apellido: adminData.apellido,
     correo: adminData.correo,
-    contrasenia: adminData.contrasenia || adminData.contrasenia, // Mantener el valor actual
+    contrasenia: adminData.contrasenia || adminData.contrasenia,
     telefono: adminData.telefono,
     direccion: adminData.direccion,
     role: adminData.role || "admin",
   });
 
-  // Manejar cambios en los campos del formulario
+  // Guardar el estado inicial para comparar cambios
+  const [initialFormData] = useState(formData);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -39,11 +39,9 @@ const DataUpdate = () => {
     }));
   };
 
-  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar que todos los campos estén llenos
     if (
       !formData.nombre ||
       !formData.apellido ||
@@ -55,18 +53,13 @@ const DataUpdate = () => {
     }
 
     try {
-      // Llamar al servicio para actualizar los datos
       const updatedData = await AdminService.updateAdmin(
         adminData.id,
         formData
       );
-      console.log("Datos actualizados exitosamente:", updatedData);
-
-      // Actualizar los datos en localStorage
       localStorage.setItem("admin", JSON.stringify(updatedData));
-
       alert("Datos actualizados exitosamente.");
-      navigate("/data"); // Redirigir a la página de datos
+      navigate("/data");
     } catch (error) {
       console.error("Error al actualizar los datos:", error);
       alert(
@@ -75,9 +68,34 @@ const DataUpdate = () => {
     }
   };
 
+  // Función para comparar si hay cambios en el formulario
+  const isFormModified = () => {
+    return (
+      formData.nombre !== initialFormData.nombre ||
+      formData.apellido !== initialFormData.apellido ||
+      formData.telefono !== initialFormData.telefono ||
+      formData.direccion !== initialFormData.direccion
+    );
+  };
+
+  // Botón para volver a /data con verificación de cambios
+  const handleBack = () => {
+    if (isFormModified()) {
+      if (
+        window.confirm(
+          "Tienes cambios sin guardar. ¿Seguro que deseas cancelar la actualización de información?"
+        )
+      ) {
+        navigate("/data");
+      }
+    } else {
+      navigate("/data");
+    }
+  };
+
   useEffect(() => {
     // Verificar si el estado del formulario está bien inicializado
-    console.log(formData);
+    // console.log(formData);
   }, [formData]);
 
   return (
@@ -127,12 +145,23 @@ const DataUpdate = () => {
             className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-red-500"
           />
         </div>
-        <Button
-          text="Guardar cambios"
-          className="bg-red-600 text-white hover:bg-red-700"
-          type="submit"
-        />
+        <div className="flex gap-4">
+          <Button
+            text="Guardar cambios"
+            className="bg-red-600 text-white hover:bg-red-700"
+            type="submit"
+          />
+        </div>
       </form>
+      {/* Botón Volver fuera del form */}
+      <div className="flex gap-4 mt-4">
+        <Button
+          text="Volver"
+          className="bg-red-600 text-white hover:bg-gray-400"
+          type="button"
+          onClick={handleBack}
+        />
+      </div>
     </div>
   );
 };

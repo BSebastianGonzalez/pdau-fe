@@ -7,11 +7,6 @@ import Button from "../../../../components/Button";
 import { useNavigate } from "react-router-dom";
 import ComplaintService from "../../../../services/ComplaintService"; // Importar el servicio
 
-const validateText = (text) => {
-  const regex = /^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑ]+$/;
-  return text.trim().length >= 3 && regex.test(text);
-};
-
 const RegisterSection = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,6 +14,8 @@ const RegisterSection = () => {
   const [description, setDescription] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [files, setFiles] = useState([]);
+  const [loadingModal, setLoadingModal] = useState(false);
+  const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +33,15 @@ const RegisterSection = () => {
     fetchCategories();
   }, []);
 
+  // Animación del modal de carga
+  useEffect(() => {
+    if (loadingModal) {
+      setTimeout(() => setIsLoadingModalOpen(true), 10);
+    } else {
+      setIsLoadingModalOpen(false);
+    }
+  }, [loadingModal]);
+
   const handleCategorySelect = (categories) => {
     setSelectedCategories(categories);
   };
@@ -46,10 +52,13 @@ const RegisterSection = () => {
   };
 
   const handleSubmit = async () => {
+    // Eliminadas las comprobaciones de texto válido
     if (!title || !description || selectedCategories.length === 0) {
       alert("Por favor, complete todos los campos obligatorios.");
       return;
     }
+
+    setLoadingModal(true); // Mostrar modal de carga
 
     const complaintData = {
       titulo: title,
@@ -57,9 +66,7 @@ const RegisterSection = () => {
       categoriaIds: selectedCategories.map((category) => category.id),
     };
 
-    console.log("Enviando datos:", complaintData);
     try {
-      // 1. Crear la denuncia
       const response = await ComplaintService.createComplaint(complaintData);
       const token = response.token; // Asume que el backend devuelve un token
       const denunciaId = response.id; // Asegúrate que el backend devuelve el id de la denuncia
@@ -74,16 +81,37 @@ const RegisterSection = () => {
         }
       }
 
+      setLoadingModal(false); // Ocultar modal de carga
       // 3. Redirigir
       navigate("/finished_register", { state: { token } });
     } catch (error) {
+      setLoadingModal(false); // Ocultar modal de carga
       console.error("Error al registrar la denuncia:", error);
       alert("Hubo un error al registrar la denuncia. Inténtelo nuevamente.");
     }
   };
 
   return (
-    <section className="mt-10">
+    <section className="mt-10 relative">
+      {/* Modal de carga animado */}
+      {loadingModal && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm bg-black/30">
+          <div
+            className={`bg-white rounded-lg shadow-lg px-8 py-6 flex flex-col items-center transition-all duration-300
+              ${isLoadingModalOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
+            style={{ minWidth: "320px" }}
+          >
+            <span className="text-lg font-semibold mb-4 text-center">
+              Enviando denuncia. Esto podría demorar un poco.
+            </span>
+            {/* Barra de carga simulada */}
+            <div className="w-64 h-3 bg-gray-200 rounded-full overflow-hidden mb-2">
+              <div className="h-full bg-red-500 animate-pulse-bar" style={{ width: "60%" }}></div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <h1 className="text-2xl text-center font-bold">
         Registro de denuncia anónima
       </h1>
@@ -109,7 +137,6 @@ const RegisterSection = () => {
         <TextField
           placeholder="Escribe un título corto, claro y conciso"
           required
-          validate={validateText}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -129,7 +156,6 @@ const RegisterSection = () => {
           placeholder="Añade una descripción detallada"
           height="h-32"
           required
-          validate={validateText}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />

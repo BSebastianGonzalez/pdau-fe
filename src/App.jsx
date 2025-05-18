@@ -35,7 +35,6 @@ function App() {
         <Route path="/data_update" element={<DataUpdatePage />} />
         <Route path="/read_complaint" element={<ViewComplaints />} />
         <Route path="/archived_complaints" element={<ViewArchivedComplaints />} />
-        {/* Puedes agregar más rutas aquí */}
       </Routes>
     </Router>
   );

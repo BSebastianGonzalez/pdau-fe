@@ -161,6 +161,39 @@ const ComplaintService = {
       throw error;
     }
   },
+
+  // Remitir una denuncia a un departamento
+  assignComplaintToDepartment: async (idDenuncia, idDepartamento) => {
+    try {
+      const response = await axios.put(`/denuncias/${idDenuncia}/departamento/${idDepartamento}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al asignar la denuncia ${idDenuncia} al departamento ${idDepartamento}:`, error);
+      throw error;
+    }
+  },
+
+  // Obtener denuncias por departamento
+  getComplaintsByDepartment: async (idDepartamento) => {
+    try {
+      const response = await axios.get(`/denuncias/departamento/${idDepartamento}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al obtener denuncias del departamento ${idDepartamento}:`, error);
+      throw error;
+    }
+  },
+
+  // Obtener todos los departamentos
+  getAllDepartamentos: async () => {
+    try {
+      const response = await axios.get("/departamentos");
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener los departamentos:", error);
+      throw error;
+    }
+  },
 };
 
 export default ComplaintService;
