@@ -7,6 +7,7 @@ import ComplaintSidebar from "../components/ComplaintSidebar";
 import SidebarCategories from "../components/SidebarCategories";
 import SidebarFiles from "../components/SidebarFiles";
 import SidebarState from "../components/SidebarState";
+import ChangeStateModal from "../components/ChangeStateModal";
 
 const ComplaintData = () => {
   const location = useLocation();
@@ -21,6 +22,9 @@ const ComplaintData = () => {
   const [selectedState, setSelectedState] = useState("");
   const [justification, setJustification] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  // Success alert state
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // Obtén el ID de la denuncia desde el estado de navegación o query param
   const complaintId =
@@ -111,6 +115,9 @@ const ComplaintData = () => {
       } else {
         setNextStates([]);
       }
+      // Mostrar cartel de éxito animado
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2000);
     } catch (error) {
       alert("Error al cambiar el estado. Intenta nuevamente.");
       setSubmitting(false);
@@ -178,62 +185,37 @@ const ComplaintData = () => {
       </div>
 
       {/* Modal de cambio de estado */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative">
-            <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl"
-              onClick={handleCloseModal}
-              disabled={submitting}
-              aria-label="Cerrar"
-            >
-              &times;
-            </button>
-            <h2 className="text-2xl font-bold mb-6 text-center text-black">
-              Cambiar estado de la denuncia
-            </h2>
-            <form onSubmit={handleSubmitStateChange} className="flex flex-col gap-4">
-              <div>
-                <label className="block font-semibold mb-1 text-gray-700">
-                  Selecciona el nuevo estado
-                </label>
-                <select
-                  className="w-full border rounded px-3 py-2"
-                  value={selectedState}
-                  onChange={(e) => setSelectedState(e.target.value)}
-                  required
-                  disabled={submitting}
-                >
-                  <option value="">Selecciona un estado...</option>
-                  {nextStates.map((estado) => (
-                    <option key={estado.id} value={estado.id}>
-                      {estado.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block font-semibold mb-1 text-gray-700">
-                  Justificación del cambio
-                </label>
-                <textarea
-                  className="w-full border rounded px-3 py-2"
-                  value={justification}
-                  onChange={(e) => setJustification(e.target.value)}
-                  required
-                  rows={3}
-                  disabled={submitting}
-                  placeholder="Explica la razón del cambio de estado"
-                />
-              </div>
-              <Button
-                text={submitting ? "Enviando..." : "Confirmar cambio"}
-                className="bg-red-500 hover:bg-red-800 text-white w-full py-3 text-lg rounded-lg mt-2"
-                type="submit"
-                disabled={submitting}
-              />
-            </form>
+      <ChangeStateModal
+        show={showModal}
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitStateChange}
+        nextStates={nextStates}
+        selectedState={selectedState}
+        setSelectedState={setSelectedState}
+        justification={justification}
+        setJustification={setJustification}
+        submitting={submitting}
+      />
+
+      {/* Cartel animado de éxito */}
+      {showSuccess && (
+        <div className="fixed bottom-8 left-1/2 z-50 transform -translate-x-1/2">
+          <div className="bg-green-500 text-white px-8 py-4 rounded-lg shadow-lg text-xl font-bold animate-fade-in-out">
+            ¡Estado de la denuncia cambiado correctamente!
           </div>
+          <style>
+            {`
+              @keyframes fadeInOut {
+                0% { opacity: 0; transform: translateY(40px);}
+                10% { opacity: 1; transform: translateY(0);}
+                90% { opacity: 1; transform: translateY(0);}
+                100% { opacity: 0; transform: translateY(40px);}
+              }
+              .animate-fade-in-out {
+                animation: fadeInOut 2s;
+              }
+            `}
+          </style>
         </div>
       )}
     </div>
