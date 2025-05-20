@@ -252,7 +252,7 @@ const ComplaintData = () => {
             >
               &times;
             </button>
-            <h2 className="text-2xl font-bold mb-6 text-center text-purple-900">
+            <h2 className="text-2xl font-bold mb-6 text-center text-black">
               Cambiar estado de la denuncia
             </h2>
             <form onSubmit={handleSubmitStateChange} className="flex flex-col gap-4">
@@ -291,7 +291,7 @@ const ComplaintData = () => {
               </div>
               <Button
                 text={submitting ? "Enviando..." : "Confirmar cambio"}
-                className="bg-purple-700 hover:bg-purple-800 text-white w-full py-3 text-lg rounded-lg mt-2"
+                className="bg-red-500 hover:bg-red-800 text-white w-full py-3 text-lg rounded-lg mt-2"
                 type="submit"
                 disabled={submitting}
               />
