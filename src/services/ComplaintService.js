@@ -205,6 +205,17 @@ const ComplaintService = {
       throw error;
     }
   },
+
+  // Obtener un estado por ID
+  getEstadoById: async (id) => {
+    try {
+      const response = await axios.get(`/estados/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al obtener el estado con ID ${id}:`, error);
+      throw error;
+    }
+  },
 };
 
 export default ComplaintService;
