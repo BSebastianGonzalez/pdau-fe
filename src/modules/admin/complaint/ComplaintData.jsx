@@ -8,6 +8,7 @@ import SidebarCategories from "../components/SidebarCategories";
 import SidebarFiles from "../components/SidebarFiles";
 import SidebarState from "../components/SidebarState";
 import ChangeStateModal from "../components/ChangeStateModal";
+import StateChangeHistory from "../../admin/components/StateChangeHistory"; // Importa el nuevo componente
 
 const ComplaintData = () => {
   const location = useLocation();
@@ -25,6 +26,10 @@ const ComplaintData = () => {
 
   // Success alert state
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // Cambios de estado
+  const [stateChanges, setStateChanges] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
 
   // Obtén el ID de la denuncia desde el estado de navegación o query param
   const complaintId =
@@ -66,6 +71,10 @@ const ComplaintData = () => {
         } else {
           setNextStates([]);
         }
+
+        // Obtener historial de cambios de estado
+        const cambios = await StateChangeService.getCambiosEstadoByDenunciaId(complaintId);
+        setStateChanges(Array.isArray(cambios) ? cambios : []);
       } catch (error) {
         console.error("Error al obtener la denuncia:", error);
       } finally {
@@ -115,6 +124,9 @@ const ComplaintData = () => {
       } else {
         setNextStates([]);
       }
+      // Recarga historial de cambios de estado
+      const cambios = await StateChangeService.getCambiosEstadoByDenunciaId(complaintId);
+      setStateChanges(Array.isArray(cambios) ? cambios : []);
       // Mostrar cartel de éxito animado
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 2000);
@@ -181,6 +193,13 @@ const ComplaintData = () => {
             className="bg-red-600 hover:bg-red-700 text-white mt-2"
             onClick={handleOpenModal}
           />
+          {stateChanges.length > 0 && (
+            <Button
+              text="Cambios de estado anteriores..."
+              className="bg-gray-200 hover:bg-gray-400 text-black mt-0"
+              onClick={() => setShowHistory(true)}
+            />
+          )}
         </ComplaintSidebar>
       </div>
 
@@ -195,6 +214,13 @@ const ComplaintData = () => {
         justification={justification}
         setJustification={setJustification}
         submitting={submitting}
+      />
+
+      {/* Modal de historial de cambios de estado */}
+      <StateChangeHistory
+        show={showHistory}
+        onClose={() => setShowHistory(false)}
+        changes={stateChanges}
       />
 
       {/* Cartel animado de éxito */}
