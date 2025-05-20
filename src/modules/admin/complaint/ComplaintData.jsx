@@ -9,6 +9,7 @@ import SidebarFiles from "../components/SidebarFiles";
 import SidebarState from "../components/SidebarState";
 import ChangeStateModal from "../components/ChangeStateModal";
 import StateChangeHistory from "../../admin/components/StateChangeHistory"; // Importa el nuevo componente
+import FileComplaintModal from "../components/FileComplaint";
 
 const ComplaintData = () => {
   const location = useLocation();
@@ -30,6 +31,10 @@ const ComplaintData = () => {
   // Cambios de estado
   const [stateChanges, setStateChanges] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
+
+  // Modal de archivo
+  const [showArchiveModal, setShowArchiveModal] = useState(false);
+  const [showArchiveSuccess, setShowArchiveSuccess] = useState(false);
 
   // Obtén el ID de la denuncia desde el estado de navegación o query param
   const complaintId =
@@ -170,7 +175,7 @@ const ComplaintData = () => {
           </div>
           {/* Etiqueta y campo de Descripción */}
           <div className="flex items-center gap-4">
-            <span className="bg-black text-white px-6 py-3 rounded font-bold text-lg min-w-[160px] text-center">
+            <span className="bg-black text-white px-5 py-3 rounded font-bold text-lg min-w-[160px] text-center">
               Descripción
             </span>
             <textarea
@@ -193,6 +198,7 @@ const ComplaintData = () => {
             className="bg-red-600 hover:bg-red-700 text-white mt-2"
             onClick={handleOpenModal}
           />
+          
           {stateChanges.length > 0 && (
             <Button
               text="Cambios de estado anteriores..."
@@ -200,6 +206,16 @@ const ComplaintData = () => {
               onClick={() => setShowHistory(true)}
             />
           )}
+          <Button
+            text={
+              <span className="flex items-center gap-2">
+                <img src="/img/file.png" alt="Archivo" className="w-5 h-5" />
+                Archivar denuncia
+              </span>
+            }
+            className="bg-gray-200 hover:bg-gray-400 text-red-600 mt-2"
+            onClick={() => setShowArchiveModal(true)}
+          />
         </ComplaintSidebar>
       </div>
 
@@ -223,11 +239,46 @@ const ComplaintData = () => {
         changes={stateChanges}
       />
 
+      {/* Modal de archivo */}
+      <FileComplaintModal
+        show={showArchiveModal}
+        onClose={() => setShowArchiveModal(false)}
+        complaintId={complaintId}
+        adminId={adminId}
+        onSuccess={() => {
+          setShowArchiveModal(false);
+          setShowArchiveSuccess(true);
+          setTimeout(() => setShowArchiveSuccess(false), 2000);
+        }}
+      />
+
       {/* Cartel animado de éxito */}
       {showSuccess && (
         <div className="fixed bottom-8 left-1/2 z-50 transform -translate-x-1/2">
           <div className="bg-green-500 text-white px-8 py-4 rounded-lg shadow-lg text-xl font-bold animate-fade-in-out">
             ¡Estado de la denuncia cambiado correctamente!
+          </div>
+          <style>
+            {`
+              @keyframes fadeInOut {
+                0% { opacity: 0; transform: translateY(40px);}
+                10% { opacity: 1; transform: translateY(0);}
+                90% { opacity: 1; transform: translateY(0);}
+                100% { opacity: 0; transform: translateY(40px);}
+              }
+              .animate-fade-in-out {
+                animation: fadeInOut 2s;
+              }
+            `}
+          </style>
+        </div>
+      )}
+
+      {/* Cartel animado de éxito al archivar */}
+      {showArchiveSuccess && (
+        <div className="fixed bottom-8 left-1/2 z-50 transform -translate-x-1/2">
+          <div className="bg-green-500 text-white px-8 py-4 rounded-lg shadow-lg text-xl font-bold animate-fade-in-out">
+            Denuncia archivada con éxito
           </div>
           <style>
             {`

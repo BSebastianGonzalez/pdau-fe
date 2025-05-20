@@ -1,5 +1,5 @@
 const SidebarFiles = ({ files }) => (
-  <div className="bg-purple-200 rounded-lg p-4 shadow flex flex-col items-center">
+  <div className="bg-gray-900 text-white rounded-lg p-4 shadow flex flex-col items-center">
     <div className="font-bold mb-3 bg-gray-900 text-white px-4 py-2 rounded text-center">
       Archivos de evidencia
     </div>
@@ -18,14 +18,14 @@ const SidebarFiles = ({ files }) => (
           return (
             <li
               key={file.id}
-              className="flex items-center gap-3 bg-white rounded px-2 py-2 shadow-sm hover:bg-gray-50 transition"
+              className="flex items-center gap-3 bg-gray-300 rounded px-2 py-2 shadow-sm hover:bg-gray-200 transition"
             >
               <img src={icon} alt="Archivo" className="w-6 h-6" />
               <a
                 href={file.urlArchivo || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-700 font-medium hover:underline break-all"
+                className="text-blue-900 font-medium hover:underline break-all"
                 title={file.nombreArchivo || file.urlArchivo}
               >
                 {file.nombreArchivo || file.urlArchivo}
@@ -35,7 +35,7 @@ const SidebarFiles = ({ files }) => (
         })}
       </ul>
     ) : (
-      <span className="text-gray-500">No hay archivos</span>
+      <span className="text-gray-300">No hay archivos</span>
     )}
   </div>
 );
