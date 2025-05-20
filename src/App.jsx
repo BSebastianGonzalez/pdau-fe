@@ -15,6 +15,7 @@ import ViewComplaints from './pages/complaint/ViewComplaints';
 import ViewArchivedComplaints from './pages/complaint/ViewArchivedComplaints';
 import LawFrame from './pages/user/LawFrame';
 import ViewLaw from './pages/user/ViewLaw';
+import ComplaintCheckout from './pages/admin/ComplaintCheckout';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/data_update" element={<DataUpdatePage />} />
         <Route path="/read_complaint" element={<ViewComplaints />} />
         <Route path="/archived_complaints" element={<ViewArchivedComplaints />} />
+        <Route path="/complaint_checkout" element={<ComplaintCheckout />} />
       </Routes>
     </Router>
   );

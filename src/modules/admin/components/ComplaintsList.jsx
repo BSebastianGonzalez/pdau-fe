@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ComplaintService from "../../../services/ComplaintService";
 import ListContainer from "../../../components/ListContainer";
 import Tag from "../../../components/Tag";
@@ -17,6 +18,7 @@ const ComplaintsList = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -262,7 +264,9 @@ const ComplaintsList = () => {
                   <td className="px-4 py-2 text-center">
                     <button
                       onClick={() =>
-                        console.log(`Revisar denuncia con ID: ${complaint.id}`)
+                        navigate("/complaint_checkout", {
+                          state: { complaintId: complaint.id }
+                        })
                       }
                       className="flex items-center gap-2 text-base-600 hover:underline"
                     >

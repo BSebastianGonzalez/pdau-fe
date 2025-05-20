@@ -154,7 +154,7 @@ const ComplaintService = {
   // Obtener archivos por denunciaId
   getFilesByComplaintId: async (denunciaId) => {
     try {
-      const response = await axios.get(`/archivos/${denunciaId}`);
+      const response = await axios.get(`/evidencia/${denunciaId}`);
       return response.data;
     } catch (error) {
       console.error(`Error al obtener archivos de la denuncia con ID ${denunciaId}:`, error);
@@ -191,6 +191,17 @@ const ComplaintService = {
       return response.data;
     } catch (error) {
       console.error("Error al obtener los departamentos:", error);
+      throw error;
+    }
+  },
+
+  // Actualizar el estado de una denuncia
+  updateComplaintStatus: async (idDenuncia, idEstado) => {
+    try {
+      const response = await axios.put(`/denuncias/${idDenuncia}/estado/${idEstado}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al actualizar el estado de la denuncia con ID ${idDenuncia}:`, error);
       throw error;
     }
   },

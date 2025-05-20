@@ -50,8 +50,36 @@ const FileUploader = ({ onFilesChange }) => {
             onChange={handleFileChange}
             className="hidden"
             multiple
+            accept="
+              .jpg,.jpeg,.png,.gif,.bmp,.webp,.tif,.tiff,.ico,.svg,
+              .mp4,.webm,.ogv,.ogg,.mov,.flv,.m3u8,.3gp,
+              .mp3,.wav,.aac,
+              image/jpeg,image/png,image/gif,image/bmp,image/webp,image/tiff,image/x-icon,image/svg+xml,
+              video/mp4,video/webm,video/ogg,video/quicktime,video/x-flv,application/x-mpegURL,video/3gpp,
+              audio/mpeg,audio/wav,audio/ogg,audio/aac
+            "
           />
         </label>
+        <div className="flex items-center gap-2 mt-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
+            />
+          </svg>
+          <span className="text-xs text-gray-500">
+            Imágenes: .jpg, .jpeg, .png, .gif, .bmp, .webp, .tif, .tiff, .ico, .svg&nbsp;|&nbsp;
+            Video/Audio: .mp4, .webm, .ogv, .ogg, .mov, .flv, .m3u8, .3gp, .mp3, .wav, .aac
+          </span>
+        </div>
       </div>
     </div>
   );
