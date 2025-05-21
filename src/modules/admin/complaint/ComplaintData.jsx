@@ -192,7 +192,7 @@ const ComplaintData = () => {
   if (!complaint) return <ComplaintNotFound />;
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 p-8 bg-gray-100 min-h-screen">
+    <div className="flex flex-col md:flex-row gap-8 p-5 bg-gray-100 min-h-screen">
       {/* Contenedor scrollable solo para la sección principal */}
       <div
         className="flex-1 flex flex-col"

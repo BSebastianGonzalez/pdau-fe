@@ -20,7 +20,7 @@ const ComplaintMainInfo = ({
       <div className="flex flex-col gap-6">
         {/* Título */}
         <div className="flex items-center gap-4">
-          <span className="bg-black text-white px-6 py-3 rounded font-bold text-lg min-w-[160px] text-center">
+          <span className="bg-black text-white px-6 py-3 rounded font-bold text-lg w-[200px] min-w-[200px] text-center">
             Título
           </span>
           <input
@@ -32,7 +32,7 @@ const ComplaintMainInfo = ({
         </div>
         {/* Descripción */}
         <div className="flex items-center gap-4">
-          <span className="bg-black text-white px-5 py-3 rounded font-bold text-lg min-w-[160px] text-center">
+          <span className="bg-black text-white px-5 py-3 rounded font-bold text-lg w-[200px] min-w-[200px] text-center">
             Descripción
           </span>
           <textarea
@@ -44,7 +44,7 @@ const ComplaintMainInfo = ({
         {/* Departamento actual */}
         {complaint.departamento && (
           <div className="flex items-center gap-4">
-            <span className="bg-black text-white px-5 py-3 rounded font-bold text-lg min-w-[160px] text-center">
+            <span className="bg-black text-white px-5 py-3 rounded font-bold text-lg w-[200px] min-w-[200px] text-center">
               Departamento actual
             </span>
             <input
@@ -57,7 +57,7 @@ const ComplaintMainInfo = ({
         )}
         {/* Remitir a departamento */}
         <form onSubmit={onRemitir} className="flex items-center gap-4">
-          <span className="bg-black text-white px-5 py-3 rounded font-bold text-lg min-w-[160px] text-center">
+          <span className="bg-black text-white px-5 py-3 rounded font-bold text-lg w-[200px] min-w-[200px] text-center">
             Remitir a departamento
           </span>
           <select
