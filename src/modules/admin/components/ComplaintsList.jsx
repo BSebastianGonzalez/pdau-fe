@@ -13,11 +13,16 @@ const ComplaintsList = () => {
   const [selectedCategoryName, setSelectedCategoryName] = useState("");
   const [selectedDepartamentoId, setSelectedDepartamentoId] = useState("");
   const [selectedDepartamentoName, setSelectedDepartamentoName] = useState("");
+  const [estados, setEstados] = useState([]);
+  const [selectedEstadoId, setSelectedEstadoId] = useState("");
+  const [selectedEstadoName, setSelectedEstadoName] = useState("");
   const [keyword, setKeyword] = useState("");
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,10 +31,14 @@ const ComplaintsList = () => {
         const complaintsData = await ComplaintService.getUnarchivedComplaints();
         const categoriesData = await ComplaintService.getAllCategories();
         const departamentosData = await ComplaintService.getAllDepartamentos();
+        const estadosData = await ComplaintService.getEstados
+          ? await ComplaintService.getEstados()
+          : [];
         setComplaints(complaintsData);
         setFilteredComplaints(complaintsData);
         setCategories(categoriesData);
         setDepartamentos(departamentosData);
+        setEstados(estadosData);
       } catch (error) {
         console.error("Error al obtener datos:", error);
       }
@@ -59,19 +68,34 @@ const ComplaintsList = () => {
 
   const applyFilters = async () => {
     try {
-      let filtered = [];
+      let filtered = complaints;
 
       if (selectedDepartamentoId) {
         filtered = await ComplaintService.getComplaintsByDepartment(selectedDepartamentoId);
-      } else if (selectedCategoryId) {
-        filtered = await ComplaintService.getComplaintsByCategory(selectedCategoryId);
-      } else {
-        filtered = complaints;
       }
-
+      if (selectedCategoryId) {
+        filtered = filtered.filter((complaint) =>
+          complaint.categorias?.some((cat) => String(cat.id) === selectedCategoryId)
+        );
+      }
+      if (selectedEstadoId) {
+        filtered = filtered.filter((complaint) =>
+          String(complaint.estado?.id) === selectedEstadoId
+        );
+      }
       if (keyword) {
         filtered = filtered.filter((complaint) =>
           complaint.titulo.toLowerCase().includes(keyword.toLowerCase())
+        );
+      }
+      if (fechaInicio) {
+        filtered = filtered.filter((complaint) =>
+          complaint.fechaCreacion >= fechaInicio
+        );
+      }
+      if (fechaFin) {
+        filtered = filtered.filter((complaint) =>
+          complaint.fechaCreacion <= fechaFin
         );
       }
 
@@ -129,6 +153,28 @@ const ComplaintsList = () => {
               onRemove={clearDepartamentoFilter}
             />
           )}
+          {selectedEstadoName && (
+            <Tag
+              text={`Estado: ${selectedEstadoName}`}
+              onRemove={() => {
+                setSelectedEstadoId("");
+                setSelectedEstadoName("");
+                setFilteredComplaints(complaints);
+              }}
+            />
+          )}
+          {fechaInicio && (
+            <Tag
+              text={`Desde: ${fechaInicio}`}
+              onRemove={() => setFechaInicio("")}
+            />
+          )}
+          {fechaFin && (
+            <Tag
+              text={`Hasta: ${fechaFin}`}
+              onRemove={() => setFechaFin("")}
+            />
+          )}
         </div>
         <button
           onClick={toggleFilterModal}
@@ -143,7 +189,11 @@ const ComplaintsList = () => {
         <div className="fixed inset-0 flex justify-center items-center z-50 backdrop-blur-sm bg-white/10">
           <div
             className={`bg-white p-6 rounded-lg shadow-lg w-96 transition-all duration-300
-              ${isFilterModalOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
+              ${
+                isFilterModalOpen
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-10 opacity-0"
+              }`}
           >
             <h2 className="text-2xl font-bold mb-4">Filtrar denuncias</h2>
             <div className="mb-4">
@@ -204,6 +254,34 @@ const ComplaintsList = () => {
             </div>
             <div className="mb-4">
               <label
+                htmlFor="estado"
+                className="block text-lg font-medium mb-2"
+              >
+                Estado
+              </label>
+              <select
+                id="estado"
+                value={selectedEstadoId}
+                onChange={(e) => {
+                  const selectedId = e.target.value;
+                  const selectedName =
+                    estados.find((est) => String(est.id) === selectedId)
+                      ?.nombre || "";
+                  setSelectedEstadoId(selectedId);
+                  setSelectedEstadoName(selectedName);
+                }}
+                className="w-full px-3 py-2 border rounded-lg"
+              >
+                <option value="">Todos los estados</option>
+                {estados.map((estado) => (
+                  <option key={estado.id} value={estado.id}>
+                    {estado.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label
                 htmlFor="keyword"
                 className="block text-lg font-medium mb-2"
               >
@@ -217,6 +295,38 @@ const ComplaintsList = () => {
                 className="w-full px-3 py-2 border rounded-lg"
                 placeholder="Buscar por título"
               />
+            </div>
+            <div className="mb-4 flex gap-4">
+              <div className="flex-1">
+                <label
+                  htmlFor="fecha-inicio"
+                  className="block text-lg font-medium mb-2"
+                >
+                  Fecha desde
+                </label>
+                <input
+                  id="fecha-inicio"
+                  type="date"
+                  value={fechaInicio}
+                  onChange={(e) => setFechaInicio(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-lg"
+                />
+              </div>
+              <div className="flex-1">
+                <label
+                  htmlFor="fecha-fin"
+                  className="block text-lg font-medium mb-2"
+                >
+                  Fecha hasta
+                </label>
+                <input
+                  id="fecha-fin"
+                  type="date"
+                  value={fechaFin}
+                  onChange={(e) => setFechaFin(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-lg"
+                />
+              </div>
             </div>
             <div className="flex justify-end gap-4">
               <button
@@ -265,7 +375,7 @@ const ComplaintsList = () => {
                     <button
                       onClick={() =>
                         navigate("/complaint_checkout", {
-                          state: { complaintId: complaint.id }
+                          state: { complaintId: complaint.id },
                         })
                       }
                       className="flex items-center gap-2 text-base-600 hover:underline"
