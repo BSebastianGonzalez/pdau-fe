@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ComplaintService from "../../../services/ComplaintService";
 import StateChangeService from "../../../services/StateChangeService";
-import ChangeStateModal from "../components/ChangeStateModal";
-import StateChangeHistory from "../../admin/components/StateChangeHistory"; // Importa el nuevo componente
-import FileComplaintModal from "../components/FileComplaint";
-import ComplaintMainInfo from "../components/ComplaintMainInfo";
-import ComplaintSidebarActions from "../components/ComplaintSidebarActions";
-import SuccessAlert from "../components/SuccessAlert";
-import ComplaintLoader from "../components/ComplaintLoader";
-import ComplaintNotFound from "../components/ComplaintNotFound";
+import ChangeStateModal from "../components/standard_complaint/ChangeStateModal";
+import StateChangeHistory from "../components/standard_complaint/StateChangeHistory"; // Importa el nuevo componente
+import FileComplaintModal from "../components/standard_complaint/FileComplaint";
+import ComplaintMainInfo from "../components/standard_complaint/ComplaintMainInfo";
+import ComplaintSidebarActions from "../components/standard_complaint/ComplaintSidebarActions";
+import SuccessAlert from "../components/standard_complaint/SuccessAlert";
+import ComplaintLoader from "../components/standard_complaint/ComplaintLoader";
+import ComplaintNotFound from "../components/standard_complaint/ComplaintNotFound";
+import CommentSection from "../components/standard_complaint/CommentSection";
 
 const ComplaintData = () => {
   const location = useLocation();
@@ -84,7 +85,9 @@ const ComplaintData = () => {
         }
 
         // Obtener historial de cambios de estado
-        const cambios = await StateChangeService.getCambiosEstadoByDenunciaId(complaintId);
+        const cambios = await StateChangeService.getCambiosEstadoByDenunciaId(
+          complaintId
+        );
         setStateChanges(Array.isArray(cambios) ? cambios : []);
       } catch (error) {
         console.error("Error al obtener la denuncia:", error);
@@ -149,7 +152,9 @@ const ComplaintData = () => {
         setNextStates([]);
       }
       // Recarga historial de cambios de estado
-      const cambios = await StateChangeService.getCambiosEstadoByDenunciaId(complaintId);
+      const cambios = await StateChangeService.getCambiosEstadoByDenunciaId(
+        complaintId
+      );
       setStateChanges(Array.isArray(cambios) ? cambios : []);
       // Mostrar cartel de éxito animado
       setShowSuccess(true);
@@ -166,7 +171,10 @@ const ComplaintData = () => {
     if (!selectedDepartamento) return;
     setAssigningDept(true);
     try {
-      await ComplaintService.assignComplaintToDepartment(complaintId, selectedDepartamento);
+      await ComplaintService.assignComplaintToDepartment(
+        complaintId,
+        selectedDepartamento
+      );
       // Recargar la denuncia para actualizar el departamento actual
       const data = await ComplaintService.getComplaintById(complaintId);
       setComplaint(data);
@@ -184,15 +192,30 @@ const ComplaintData = () => {
   if (!complaint) return <ComplaintNotFound />;
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 p-8 bg-gray-100 min-h-screen">
-      <ComplaintMainInfo
-        complaint={complaint}
-        departamentos={departamentos}
-        selectedDepartamento={selectedDepartamento}
-        assigningDept={assigningDept}
-        onDepartamentoChange={setSelectedDepartamento}
-        onRemitir={handleAssignDepartamento}
-      />
+    <div className="flex flex-col md:flex-row gap-8 p-5 bg-gray-100 min-h-screen">
+      {/* Contenedor scrollable solo para la sección principal */}
+      <div
+        className="flex-1 flex flex-col"
+        style={{
+          maxHeight: "calc(100vh - 64px)", // Ajusta 64px si tienes header, si no puedes poner 100vh
+          overflowY: "auto",
+        }}
+      >
+
+        <ComplaintMainInfo
+          complaint={complaint}
+          departamentos={departamentos}
+          selectedDepartamento={selectedDepartamento}
+          assigningDept={assigningDept}
+          onDepartamentoChange={setSelectedDepartamento}
+          onRemitir={handleAssignDepartamento}
+        />
+        
+        {/* Sección de comentarios como footer */}
+        <div className="mt-8 px-2 pb-4">
+          <CommentSection complaintId={complaintId} adminId={adminId} />
+        </div>
+      </div>
       <ComplaintSidebarActions
         categorias={complaint.categorias}
         files={files}
@@ -227,13 +250,25 @@ const ComplaintData = () => {
         onSuccess={() => {
           setShowArchiveModal(false);
           setShowArchiveSuccess(true);
-          setTimeout(() => setShowArchiveSuccess(false), 2000);
+          setTimeout(() => {
+            setShowArchiveSuccess(false);
+            navigate("/read_complaint");
+          }, 2000);
         }}
       />
       {/* Alerts */}
-      <SuccessAlert show={showSuccess} message="¡Estado de la denuncia cambiado correctamente!" />
-      <SuccessAlert show={showArchiveSuccess} message="Denuncia archivada con éxito" />
-      <SuccessAlert show={assignDeptSuccess} message="¡Departamento asignado correctamente!" />
+      <SuccessAlert
+        show={showSuccess}
+        message="¡Estado de la denuncia cambiado correctamente!"
+      />
+      <SuccessAlert
+        show={showArchiveSuccess}
+        message="Denuncia archivada con éxito"
+      />
+      <SuccessAlert
+        show={assignDeptSuccess}
+        message="¡Departamento asignado correctamente!"
+      />
     </div>
   );
 };

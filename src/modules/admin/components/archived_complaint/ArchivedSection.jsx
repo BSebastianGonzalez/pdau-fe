@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ComplaintService from "../../../services/ComplaintService";
-import ListContainer from "../../../components/ListContainer";
-import Tag from "../../../components/Tag";
+import ComplaintService from "../../../../services/ComplaintService";
+import ListContainer from "../../../../components/ListContainer";
+import Tag from "../../../../components/Tag";
 
-const ComplaintsList = () => {
+const ArchivedSection = () => {
   const [complaints, setComplaints] = useState([]);
   const [filteredComplaints, setFilteredComplaints] = useState([]);
   const [categories, setCategories] = useState([]);
   const [departamentos, setDepartamentos] = useState([]);
+  const [estados, setEstados] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [selectedCategoryName, setSelectedCategoryName] = useState("");
   const [selectedDepartamentoId, setSelectedDepartamentoId] = useState("");
   const [selectedDepartamentoName, setSelectedDepartamentoName] = useState("");
-  const [estados, setEstados] = useState([]);
   const [selectedEstadoId, setSelectedEstadoId] = useState("");
   const [selectedEstadoName, setSelectedEstadoName] = useState("");
   const [keyword, setKeyword] = useState("");
@@ -28,7 +28,7 @@ const ComplaintsList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const complaintsData = await ComplaintService.getUnarchivedComplaints();
+        const complaintsData = await ComplaintService.getArchivedComplaints();
         const categoriesData = await ComplaintService.getAllCategories();
         const departamentosData = await ComplaintService.getAllDepartamentos();
         const estadosData = await ComplaintService.getEstados
@@ -59,10 +59,10 @@ const ComplaintsList = () => {
   const toggleFilterModal = () => {
     if (!isFilterModalOpen) {
       setShowModal(true);
-      setTimeout(() => setIsFilterModalOpen(true), 10); // Espera para activar la animación
+      setTimeout(() => setIsFilterModalOpen(true), 10);
     } else {
       setIsFilterModalOpen(false);
-      setTimeout(() => setShowModal(false), 300); // Espera a que termine la animación
+      setTimeout(() => setShowModal(false), 300);
     }
   };
 
@@ -71,7 +71,10 @@ const ComplaintsList = () => {
       let filtered = complaints;
 
       if (selectedDepartamentoId) {
-        filtered = await ComplaintService.getComplaintsByDepartment(selectedDepartamentoId);
+        filtered = filtered.filter(
+          (complaint) =>
+            String(complaint.departamento?.id) === selectedDepartamentoId
+        );
       }
       if (selectedCategoryId) {
         filtered = filtered.filter((complaint) =>
@@ -136,7 +139,7 @@ const ComplaintsList = () => {
   return (
     <div className="p-8">
       <h1 className="text-4xl font-bold mb-6 text-center">
-        Denuncias anónimas
+        Denuncias archivadas
       </h1>
 
       <div className="mb-4 flex justify-between items-center">
@@ -374,7 +377,7 @@ const ComplaintsList = () => {
                   <td className="px-4 py-2 text-center">
                     <button
                       onClick={() =>
-                        navigate("/complaint_checkout", {
+                        navigate("/archived_complaint", {
                           state: { complaintId: complaint.id },
                         })
                       }
@@ -398,4 +401,4 @@ const ComplaintsList = () => {
   );
 };
 
-export default ComplaintsList;
+export default ArchivedSection;

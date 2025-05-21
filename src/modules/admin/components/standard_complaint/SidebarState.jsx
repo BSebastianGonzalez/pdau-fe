@@ -1,4 +1,4 @@
-import StatusTag from "../../../components/StatusTag";
+import StatusTag from "../../../../components/StatusTag";
 
 const SidebarState = ({ estado }) => (
   <div className="bg-gray-900 rounded-lg p-2 shadow flex flex-col items-center">

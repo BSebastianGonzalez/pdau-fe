@@ -3,7 +3,7 @@ import ComplaintSidebar from "./ComplaintSidebar";
 import SidebarCategories from "./SidebarCategories";
 import SidebarFiles from "./SidebarFiles";
 import SidebarState from "./SidebarState";
-import Button from "../../../components/Button";
+import Button from "../../../../components/Button";
 
 const ComplaintSidebarActions = ({
   categorias,
@@ -14,7 +14,7 @@ const ComplaintSidebarActions = ({
   onArchive,
   stateChanges,
 }) => (
-  <div className="w-full md:w-80 flex flex-col gap-6">
+  <div className="w-full md:w-65 flex flex-col gap-6">
     <ComplaintSidebar>
       <SidebarCategories categorias={categorias} />
       <SidebarFiles files={files} />
@@ -26,7 +26,7 @@ const ComplaintSidebarActions = ({
       />
       {stateChanges.length > 0 && (
         <Button
-          text="Cambios de estado anteriores..."
+          text="Historial de cambio de estado"
           className="bg-gray-200 hover:bg-gray-400 text-black mt-0"
           onClick={onShowHistory}
         />
