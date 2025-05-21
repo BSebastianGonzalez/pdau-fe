@@ -3,7 +3,7 @@ import ComplaintSidebar from "./ComplaintSidebar";
 import SidebarCategories from "./SidebarCategories";
 import SidebarFiles from "./SidebarFiles";
 import SidebarState from "./SidebarState";
-import Button from "../../../components/Button";
+import Button from "../../../../components/Button";
 
 const ComplaintSidebarActions = ({
   categorias,

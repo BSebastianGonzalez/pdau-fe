@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import FileComplaintService from "../../../services/FileComplaintService";
-import Button from "../../../components/Button";
+import FileComplaintService from "../../../../services/FileComplaintService";
+import Button from "../../../../components/Button";
 
 const FileComplaintModal = ({
   show,

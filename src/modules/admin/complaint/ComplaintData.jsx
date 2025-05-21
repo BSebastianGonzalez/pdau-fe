@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ComplaintService from "../../../services/ComplaintService";
 import StateChangeService from "../../../services/StateChangeService";
-import ChangeStateModal from "../components/ChangeStateModal";
-import StateChangeHistory from "../../admin/components/StateChangeHistory"; // Importa el nuevo componente
-import FileComplaintModal from "../components/FileComplaint";
-import ComplaintMainInfo from "../components/ComplaintMainInfo";
-import ComplaintSidebarActions from "../components/ComplaintSidebarActions";
-import SuccessAlert from "../components/SuccessAlert";
-import ComplaintLoader from "../components/ComplaintLoader";
-import ComplaintNotFound from "../components/ComplaintNotFound";
-import CommentSection from "../components/CommentSection";
+import ChangeStateModal from "../components/standard_complaint/ChangeStateModal";
+import StateChangeHistory from "../components/standard_complaint/StateChangeHistory"; // Importa el nuevo componente
+import FileComplaintModal from "../components/standard_complaint/FileComplaint";
+import ComplaintMainInfo from "../components/standard_complaint/ComplaintMainInfo";
+import ComplaintSidebarActions from "../components/standard_complaint/ComplaintSidebarActions";
+import SuccessAlert from "../components/standard_complaint/SuccessAlert";
+import ComplaintLoader from "../components/standard_complaint/ComplaintLoader";
+import ComplaintNotFound from "../components/standard_complaint/ComplaintNotFound";
+import CommentSection from "../components/standard_complaint/CommentSection";
 
 const ComplaintData = () => {
   const location = useLocation();
@@ -250,7 +250,10 @@ const ComplaintData = () => {
         onSuccess={() => {
           setShowArchiveModal(false);
           setShowArchiveSuccess(true);
-          setTimeout(() => setShowArchiveSuccess(false), 2000);
+          setTimeout(() => {
+            setShowArchiveSuccess(false);
+            navigate("/read_complaint");
+          }, 2000);
         }}
       />
       {/* Alerts */}

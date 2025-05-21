@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import CommentService from "../../../services/CommentService";
+import CommentService from "../../../../services/CommentService";
 
 const CommentSection = ({ complaintId, adminId }) => {
   const [open, setOpen] = useState(false);

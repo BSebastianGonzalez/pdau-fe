@@ -1,6 +1,6 @@
 import React from "react";
 import MainLayout from "../../modules/admin/layouts/MainLayout";
-import ComplaintsList from "../../modules/admin/components/ComplaintsList";
+import ComplaintsList from "../../modules/admin/components/standard_complaint/ComplaintsList";
 
 const ComplaintCheckout = () => {
   return (
