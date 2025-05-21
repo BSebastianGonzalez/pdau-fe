@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ComplaintService from "../../../services/ComplaintService";
 import StateChangeService from "../../../services/StateChangeService";
-import StatusTag from "../../../components/StatusTag";
-import Button from "../../../components/Button";
+import ChangeStateModal from "../components/ChangeStateModal";
+import StateChangeHistory from "../../admin/components/StateChangeHistory"; // Importa el nuevo componente
+import FileComplaintModal from "../components/FileComplaint";
+import ComplaintMainInfo from "../components/ComplaintMainInfo";
+import ComplaintSidebarActions from "../components/ComplaintSidebarActions";
+import SuccessAlert from "../components/SuccessAlert";
+import ComplaintLoader from "../components/ComplaintLoader";
+import ComplaintNotFound from "../components/ComplaintNotFound";
 
 const ComplaintData = () => {
   const location = useLocation();
@@ -18,6 +24,23 @@ const ComplaintData = () => {
   const [selectedState, setSelectedState] = useState("");
   const [justification, setJustification] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  // Success alert state
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  // Cambios de estado
+  const [stateChanges, setStateChanges] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
+
+  // Modal de archivo
+  const [showArchiveModal, setShowArchiveModal] = useState(false);
+  const [showArchiveSuccess, setShowArchiveSuccess] = useState(false);
+
+  // Departamentos para asignar
+  const [departamentos, setDepartamentos] = useState([]);
+  const [selectedDepartamento, setSelectedDepartamento] = useState("");
+  const [assigningDept, setAssigningDept] = useState(false);
+  const [assignDeptSuccess, setAssignDeptSuccess] = useState(false);
 
   // Obtén el ID de la denuncia desde el estado de navegación o query param
   const complaintId =
@@ -59,6 +82,10 @@ const ComplaintData = () => {
         } else {
           setNextStates([]);
         }
+
+        // Obtener historial de cambios de estado
+        const cambios = await StateChangeService.getCambiosEstadoByDenunciaId(complaintId);
+        setStateChanges(Array.isArray(cambios) ? cambios : []);
       } catch (error) {
         console.error("Error al obtener la denuncia:", error);
       } finally {
@@ -67,6 +94,19 @@ const ComplaintData = () => {
     };
     fetchData();
   }, [complaintId, navigate]);
+
+  // Efecto para obtener departamentos
+  useEffect(() => {
+    const fetchDepartamentos = async () => {
+      try {
+        const data = await ComplaintService.getAllDepartamentos();
+        setDepartamentos(data);
+      } catch (error) {
+        console.error("Error al obtener departamentos:", error);
+      }
+    };
+    fetchDepartamentos();
+  }, []);
 
   const handleOpenModal = () => {
     setSelectedState("");
@@ -108,197 +148,92 @@ const ComplaintData = () => {
       } else {
         setNextStates([]);
       }
+      // Recarga historial de cambios de estado
+      const cambios = await StateChangeService.getCambiosEstadoByDenunciaId(complaintId);
+      setStateChanges(Array.isArray(cambios) ? cambios : []);
+      // Mostrar cartel de éxito animado
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2000);
     } catch (error) {
       alert("Error al cambiar el estado. Intenta nuevamente.");
       setSubmitting(false);
     }
   };
 
-  if (loading) {
-    return <div className="p-8 text-center">Cargando denuncia...</div>;
-  }
+  // Función para asignar departamento
+  const handleAssignDepartamento = async (e) => {
+    e.preventDefault();
+    if (!selectedDepartamento) return;
+    setAssigningDept(true);
+    try {
+      await ComplaintService.assignComplaintToDepartment(complaintId, selectedDepartamento);
+      // Recargar la denuncia para actualizar el departamento actual
+      const data = await ComplaintService.getComplaintById(complaintId);
+      setComplaint(data);
+      setAssignDeptSuccess(true);
+      setTimeout(() => setAssignDeptSuccess(false), 2000);
+    } catch (error) {
+      alert("Error al asignar el departamento.");
+    } finally {
+      setAssigningDept(false);
+    }
+  };
 
-  if (!complaint) {
-    return (
-      <div className="p-8 text-center text-red-500">
-        No se encontró la denuncia.
-      </div>
-    );
-  }
+  if (loading) return <ComplaintLoader />;
+
+  if (!complaint) return <ComplaintNotFound />;
 
   return (
     <div className="flex flex-col md:flex-row gap-8 p-8 bg-gray-100 min-h-screen">
-      {/* Columna principal */}
-      <div className="flex-1">
-        <h1 className="text-5xl font-bold mb-8 text-center">
-          Revision de denuncia anonima
-        </h1>
-        <div className="flex flex-col gap-6">
-          {/* Etiqueta y campo de Título */}
-          <div className="flex items-center gap-4">
-            <span className="bg-black text-white px-6 py-3 rounded font-bold text-lg min-w-[160px] text-center">
-              Título
-            </span>
-            <input
-              type="text"
-              value={complaint.titulo}
-              readOnly
-              className="flex-1 border px-3 py-2 rounded"
-            />
-          </div>
-          {/* Etiqueta y campo de Descripción */}
-          <div className="flex items-center gap-4">
-            <span className="bg-black text-white px-6 py-3 rounded font-bold text-lg min-w-[160px] text-center">
-              Descripción
-            </span>
-            <textarea
-              value={complaint.descripcion}
-              readOnly
-              className="flex-1 border px-3 py-2 rounded h-32 resize-none"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Columna lateral */}
-      <div className="w-full md:w-80 flex flex-col gap-6">
-        {/* Categorías */}
-        <div className="bg-gray-900 text-white rounded-lg p-4 shadow flex flex-col items-center">
-          <div className="font-bold mb-2 text-center w-full">Categorias</div>
-          <div className="flex flex-wrap gap-2 justify-center w-full">
-            {(complaint.categorias || []).map((cat) => (
-              <span
-                key={cat.id}
-                className="bg-gray-300 text-black px-3 py-1 rounded-full font-semibold"
-              >
-                {cat.nombre}
-              </span>
-            ))}
-          </div>
-        </div>
-        {/* Archivos de evidencia */}
-        <div className="bg-purple-200 rounded-lg p-4 shadow flex flex-col items-center">
-          <div className="font-bold mb-3 bg-gray-900 text-white px-4 py-2 rounded text-center">
-            Archivos de evidencia
-          </div>
-          {files.length > 0 ? (
-            <ul className="space-y-2 w-full">
-              {files.map((file) => {
-                const name = (file.nombreArchivo || file.urlArchivo || "").toLowerCase();
-                let icon = "/img/document.png";
-                if (/\.(jpg|jpeg|png|gif|bmp|webp|tif|tiff|ico|svg)$/.test(name)) {
-                  icon = "/img/photo.png";
-                } else if (/\.(mp4|webm|ogv|ogg|mov|flv|m3u8|3gp)$/.test(name)) {
-                  icon = "/img/video.png";
-                } else if (/\.(mp3|wav|aac)$/.test(name)) {
-                  icon = "/img/audio.png";
-                }
-                return (
-                  <li
-                    key={file.id}
-                    className="flex items-center gap-3 bg-white rounded px-2 py-2 shadow-sm hover:bg-gray-50 transition"
-                  >
-                    <img
-                      src={icon}
-                      alt="Archivo"
-                      className="w-6 h-6"
-                    />
-                    <a
-                      href={file.urlArchivo || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-700 font-medium hover:underline break-all"
-                      title={file.nombreArchivo || file.urlArchivo}
-                    >
-                      {file.nombreArchivo || file.urlArchivo}
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <span className="text-gray-500">No hay archivos</span>
-          )}
-        </div>
-        {/* Estado actual */}
-        <div className="bg-purple-200 rounded-lg p-4 shadow flex flex-col items-center">
-          <div className="font-bold mb-3 bg-gray-900 text-white px-4 py-2 rounded text-center">
-            Estado actual
-          </div>
-          <div className="mt-1 w-full flex justify-center">
-            <StatusTag
-              text={complaint.estado?.nombre}
-              className="text-lg font-bold px-6 py-2 rounded-lg shadow bg-white text-purple-900 border border-purple-300"
-            />
-          </div>
-        </div>
-        {/* Botón cambiar estado */}
-        <Button
-          text="Cambiar estado"
-          className="bg-red-600 hover:bg-red-700 text-white mt-2"
-          onClick={handleOpenModal}
-        />
-      </div>
-
-      {/* Modal de cambio de estado */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative">
-            <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl"
-              onClick={handleCloseModal}
-              disabled={submitting}
-              aria-label="Cerrar"
-            >
-              &times;
-            </button>
-            <h2 className="text-2xl font-bold mb-6 text-center text-purple-900">
-              Cambiar estado de la denuncia
-            </h2>
-            <form onSubmit={handleSubmitStateChange} className="flex flex-col gap-4">
-              <div>
-                <label className="block font-semibold mb-1 text-gray-700">
-                  Selecciona el nuevo estado
-                </label>
-                <select
-                  className="w-full border rounded px-3 py-2"
-                  value={selectedState}
-                  onChange={(e) => setSelectedState(e.target.value)}
-                  required
-                  disabled={submitting}
-                >
-                  <option value="">Selecciona un estado...</option>
-                  {nextStates.map((estado) => (
-                    <option key={estado.id} value={estado.id}>
-                      {estado.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block font-semibold mb-1 text-gray-700">
-                  Justificación del cambio
-                </label>
-                <textarea
-                  className="w-full border rounded px-3 py-2"
-                  value={justification}
-                  onChange={(e) => setJustification(e.target.value)}
-                  required
-                  rows={3}
-                  disabled={submitting}
-                  placeholder="Explica la razón del cambio de estado"
-                />
-              </div>
-              <Button
-                text={submitting ? "Enviando..." : "Confirmar cambio"}
-                className="bg-purple-700 hover:bg-purple-800 text-white w-full py-3 text-lg rounded-lg mt-2"
-                type="submit"
-                disabled={submitting}
-              />
-            </form>
-          </div>
-        </div>
-      )}
+      <ComplaintMainInfo
+        complaint={complaint}
+        departamentos={departamentos}
+        selectedDepartamento={selectedDepartamento}
+        assigningDept={assigningDept}
+        onDepartamentoChange={setSelectedDepartamento}
+        onRemitir={handleAssignDepartamento}
+      />
+      <ComplaintSidebarActions
+        categorias={complaint.categorias}
+        files={files}
+        estado={complaint.estado}
+        onChangeState={handleOpenModal}
+        onShowHistory={() => setShowHistory(true)}
+        onArchive={() => setShowArchiveModal(true)}
+        stateChanges={stateChanges}
+      />
+      {/* Modals */}
+      <ChangeStateModal
+        show={showModal}
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitStateChange}
+        nextStates={nextStates}
+        selectedState={selectedState}
+        setSelectedState={setSelectedState}
+        justification={justification}
+        setJustification={setJustification}
+        submitting={submitting}
+      />
+      <StateChangeHistory
+        show={showHistory}
+        onClose={() => setShowHistory(false)}
+        changes={stateChanges}
+      />
+      <FileComplaintModal
+        show={showArchiveModal}
+        onClose={() => setShowArchiveModal(false)}
+        complaintId={complaintId}
+        adminId={adminId}
+        onSuccess={() => {
+          setShowArchiveModal(false);
+          setShowArchiveSuccess(true);
+          setTimeout(() => setShowArchiveSuccess(false), 2000);
+        }}
+      />
+      {/* Alerts */}
+      <SuccessAlert show={showSuccess} message="¡Estado de la denuncia cambiado correctamente!" />
+      <SuccessAlert show={showArchiveSuccess} message="Denuncia archivada con éxito" />
+      <SuccessAlert show={assignDeptSuccess} message="¡Departamento asignado correctamente!" />
     </div>
   );
 };

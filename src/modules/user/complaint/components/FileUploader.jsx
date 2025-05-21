@@ -5,8 +5,9 @@ const FileUploader = ({ onFilesChange }) => {
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    setFiles(selectedFiles);
-    onFilesChange(selectedFiles);
+    const updatedFiles = [...files, ...selectedFiles];
+    setFiles(updatedFiles);
+    onFilesChange(updatedFiles);
 
     // Limpia el input para permitir subir el mismo archivo de nuevo si se desea
     e.target.value = null;
