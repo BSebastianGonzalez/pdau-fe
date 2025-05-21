@@ -10,6 +10,7 @@ import ComplaintSidebarActions from "../components/ComplaintSidebarActions";
 import SuccessAlert from "../components/SuccessAlert";
 import ComplaintLoader from "../components/ComplaintLoader";
 import ComplaintNotFound from "../components/ComplaintNotFound";
+import CommentSection from "../components/CommentSection";
 
 const ComplaintData = () => {
   const location = useLocation();
@@ -84,7 +85,9 @@ const ComplaintData = () => {
         }
 
         // Obtener historial de cambios de estado
-        const cambios = await StateChangeService.getCambiosEstadoByDenunciaId(complaintId);
+        const cambios = await StateChangeService.getCambiosEstadoByDenunciaId(
+          complaintId
+        );
         setStateChanges(Array.isArray(cambios) ? cambios : []);
       } catch (error) {
         console.error("Error al obtener la denuncia:", error);
@@ -149,7 +152,9 @@ const ComplaintData = () => {
         setNextStates([]);
       }
       // Recarga historial de cambios de estado
-      const cambios = await StateChangeService.getCambiosEstadoByDenunciaId(complaintId);
+      const cambios = await StateChangeService.getCambiosEstadoByDenunciaId(
+        complaintId
+      );
       setStateChanges(Array.isArray(cambios) ? cambios : []);
       // Mostrar cartel de éxito animado
       setShowSuccess(true);
@@ -166,7 +171,10 @@ const ComplaintData = () => {
     if (!selectedDepartamento) return;
     setAssigningDept(true);
     try {
-      await ComplaintService.assignComplaintToDepartment(complaintId, selectedDepartamento);
+      await ComplaintService.assignComplaintToDepartment(
+        complaintId,
+        selectedDepartamento
+      );
       // Recargar la denuncia para actualizar el departamento actual
       const data = await ComplaintService.getComplaintById(complaintId);
       setComplaint(data);
@@ -185,14 +193,29 @@ const ComplaintData = () => {
 
   return (
     <div className="flex flex-col md:flex-row gap-8 p-8 bg-gray-100 min-h-screen">
-      <ComplaintMainInfo
-        complaint={complaint}
-        departamentos={departamentos}
-        selectedDepartamento={selectedDepartamento}
-        assigningDept={assigningDept}
-        onDepartamentoChange={setSelectedDepartamento}
-        onRemitir={handleAssignDepartamento}
-      />
+      {/* Contenedor scrollable solo para la sección principal */}
+      <div
+        className="flex-1 flex flex-col"
+        style={{
+          maxHeight: "calc(100vh - 64px)", // Ajusta 64px si tienes header, si no puedes poner 100vh
+          overflowY: "auto",
+        }}
+      >
+
+        <ComplaintMainInfo
+          complaint={complaint}
+          departamentos={departamentos}
+          selectedDepartamento={selectedDepartamento}
+          assigningDept={assigningDept}
+          onDepartamentoChange={setSelectedDepartamento}
+          onRemitir={handleAssignDepartamento}
+        />
+        
+        {/* Sección de comentarios como footer */}
+        <div className="mt-8 px-2 pb-4">
+          <CommentSection complaintId={complaintId} adminId={adminId} />
+        </div>
+      </div>
       <ComplaintSidebarActions
         categorias={complaint.categorias}
         files={files}
@@ -231,9 +254,18 @@ const ComplaintData = () => {
         }}
       />
       {/* Alerts */}
-      <SuccessAlert show={showSuccess} message="¡Estado de la denuncia cambiado correctamente!" />
-      <SuccessAlert show={showArchiveSuccess} message="Denuncia archivada con éxito" />
-      <SuccessAlert show={assignDeptSuccess} message="¡Departamento asignado correctamente!" />
+      <SuccessAlert
+        show={showSuccess}
+        message="¡Estado de la denuncia cambiado correctamente!"
+      />
+      <SuccessAlert
+        show={showArchiveSuccess}
+        message="Denuncia archivada con éxito"
+      />
+      <SuccessAlert
+        show={assignDeptSuccess}
+        message="¡Departamento asignado correctamente!"
+      />
     </div>
   );
 };

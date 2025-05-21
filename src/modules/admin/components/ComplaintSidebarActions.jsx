@@ -14,7 +14,7 @@ const ComplaintSidebarActions = ({
   onArchive,
   stateChanges,
 }) => (
-  <div className="w-full md:w-80 flex flex-col gap-6">
+  <div className="w-full md:w-65 flex flex-col gap-6">
     <ComplaintSidebar>
       <SidebarCategories categorias={categorias} />
       <SidebarFiles files={files} />
