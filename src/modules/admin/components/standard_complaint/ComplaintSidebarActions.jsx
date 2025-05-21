@@ -26,7 +26,7 @@ const ComplaintSidebarActions = ({
       />
       {stateChanges.length > 0 && (
         <Button
-          text="Cambios de estado anteriores..."
+          text="Historial de cambio de estado"
           className="bg-gray-200 hover:bg-gray-400 text-black mt-0"
           onClick={onShowHistory}
         />
