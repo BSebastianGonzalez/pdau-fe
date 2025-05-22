@@ -5,7 +5,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://rrv7.vercel.app/"
+          "value": "https://pdau-fe.vercel.app"
         },
         {
           "key": "Access-Control-Allow-Methods",
