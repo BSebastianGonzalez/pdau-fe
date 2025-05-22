@@ -42,7 +42,7 @@ const FinishedRegister = () => {
       </p>
       <div className="flex gap-4 mt-6">
         <Button
-          text="Descargar token (PDF)"
+          text="Descargar token (TXT)"
           className="bg-red-600 hover:bg-red-700 text-white"
           onClick={handleDownloadToken}
         />
