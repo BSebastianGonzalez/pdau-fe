@@ -26,7 +26,8 @@ const CredentialsSection = () => {
       } else {
         setError(response.message || "Error al iniciar sesión. Verifica tus credenciales.");
       }
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       setError("Error al iniciar sesión. Verifica tus credenciales.");
     }
   };
