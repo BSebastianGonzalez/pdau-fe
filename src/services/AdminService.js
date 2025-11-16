@@ -69,6 +69,28 @@ const AdminService = {
       throw error;
     }
   },
+
+  // Enviar enlace para reestablecer contraseña
+  forgotPassword: async (correo) => {
+    try {
+      const response = await axios.post("/admins/forgot-password", { correo });
+      return response.data;
+    } catch (error) {
+      console.error("Error al solicitar enlace de reestablecimiento:", error);
+      throw error;
+    }
+  },
+
+  // Resetear contraseña usando token
+  resetPassword: async (token, newPassword) => {
+    try {
+      const response = await axios.post("/admins/reset-password", { token, newPassword });
+      return response.data;
+    } catch (error) {
+      console.error("Error al resetear la contraseña:", error);
+      throw error;
+    }
+  },
 };
 
 export default AdminService;
