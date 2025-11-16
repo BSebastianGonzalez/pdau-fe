@@ -36,6 +36,11 @@ const Sidebar = ({ adminData }) => {
     navigate("/read_complaint", { state: { adminData } });
   };
 
+  const handleNavigateToStatistics = () => {
+    setSelectedSection("Estadísticas");
+    navigate("/statistics", { state: { adminData } });
+  };
+
   return (
     <div className="h-full w-full bg-[#DB4747] text-white flex flex-col justify-between py-6">
       {/* Parte superior */}
@@ -145,6 +150,17 @@ const Sidebar = ({ adminData }) => {
               <span className="text-base">Denuncias archivadas</span>
             </div>
           </div>
+        </div>
+
+        {/* Sección Estadísticas */}
+        <div
+          className={`w-full px-4 py-3 flex items-center gap-4 cursor-pointer ${
+            selectedSection === "Estadísticas" ? "bg-white/40 rounded-lg" : ""
+          }`}
+          onClick={handleNavigateToStatistics}
+        >
+          <img src="img/check_complaint.svg" alt="Estadísticas" className="w-6 h-6" />
+          <span className="text-lg font-medium">Estadísticas</span>
         </div>
       </div>
 
