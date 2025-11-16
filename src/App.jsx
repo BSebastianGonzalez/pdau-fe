@@ -17,6 +17,7 @@ import LawFrame from './pages/user/LawFrame';
 import ViewLaw from './pages/user/ViewLaw';
 import ComplaintCheckout from './pages/admin/ComplaintCheckout';
 import ArchivedData from './pages/admin/ArchivedData';
+import ForgotPasswordPage from './pages/admin/ForgotPasswordPage';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route path="/archived_complaints" element={<ViewArchivedComplaints />} />
         <Route path="/complaint_checkout" element={<ComplaintCheckout />} />
         <Route path="/archived_complaint" element={<ArchivedData/>} />
+        <Route path="/forgot_password" element={<ForgotPasswordPage />} />
       </Routes>
     </Router>
   );

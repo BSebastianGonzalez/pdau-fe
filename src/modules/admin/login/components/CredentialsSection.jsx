@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Importar useNavigate
 import AdminService from "../../../../services/AdminService";
 import Button from "../../../../components/Button";
+import { Link } from "react-router-dom";
 
 const CredentialsSection = () => {
   const [correo, setCorreo] = useState("");
@@ -59,6 +60,16 @@ const CredentialsSection = () => {
             className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-red-500"
             placeholder="Ingresa tu contraseña"
           />
+        </div>
+        <div className="text-right mt-1">
+          <Link to="/forgot_password">
+          <button
+            type="button"
+            className="text-sm text-blue-600 hover:underline"
+          >
+            ¿Olvidaste tu contraseña?
+          </button>
+          </Link>
         </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <Button
