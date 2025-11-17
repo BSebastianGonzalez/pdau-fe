@@ -5,6 +5,7 @@ const Sidebar = ({ adminData }) => {
   const [selectedSection, setSelectedSection] = useState("Inicio");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isComplaintDropdownOpen, setIsComplaintDropdownOpen] = useState(false); // Estado para la nueva lista desplegable
+  const [isAuditDropdownOpen, setIsAuditDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSectionClick = (section) => {
@@ -26,6 +27,10 @@ const Sidebar = ({ adminData }) => {
     setIsComplaintDropdownOpen(!isComplaintDropdownOpen);
   };
 
+  const toggleAuditDropdown = () => {
+    setIsAuditDropdownOpen(!isAuditDropdownOpen);
+  };
+
   const handleNavigateToData = () => {
     setSelectedSection("Ver mis datos");
     navigate("/data", { state: { adminData } });
@@ -39,6 +44,13 @@ const Sidebar = ({ adminData }) => {
   const handleNavigateToStatistics = () => {
     setSelectedSection("Estadísticas");
     navigate("/statistics", { state: { adminData } });
+  };
+
+  
+
+  const handleNavigateToAuditStatistics = () => {
+    setSelectedSection("Estadísticas Auditoría");
+    navigate('/audit_statistics', { state: { adminData } });
   };
 
   return (
@@ -152,7 +164,7 @@ const Sidebar = ({ adminData }) => {
           </div>
         </div>
 
-        {/* Sección Estadísticas */}
+        {/* Sección Estadísticas (denuncias) */}
         <div
           className={`w-full px-4 py-3 flex items-center gap-4 cursor-pointer ${
             selectedSection === "Estadísticas" ? "bg-white/40 rounded-lg" : ""
@@ -161,6 +173,39 @@ const Sidebar = ({ adminData }) => {
         >
           <img src="img/check_complaint.svg" alt="Estadísticas" className="w-6 h-6" />
           <span className="text-lg font-medium">Estadísticas</span>
+        </div>
+
+        {/* Sección Auditoría (desplegable) */}
+        <div className="w-full">
+          <div
+            className="w-full px-4 py-3 flex items-center gap-4 cursor-pointer hover:bg-white/20"
+            onClick={toggleAuditDropdown}
+          >
+            <img src="img/filter.svg" alt="Auditoría" className="w-6 h-6" />
+            <span className="text-lg font-medium">Auditoría</span>
+            <span
+              className={`ml-auto transform transition-transform ${
+                isAuditDropdownOpen ? "rotate-180" : "rotate-0"
+              }`}
+              style={{ color: "black" }}
+            >
+              ▼
+            </span>
+          </div>
+          <div
+            className={`pl-8 overflow-hidden transition-all duration-300 ease-in-out ${
+              isAuditDropdownOpen ? "max-h-40" : "max-h-0"
+            }`}
+          >
+            <div
+              className={`w-full px-4 py-2 flex items-center gap-4 cursor-pointer hover:bg-white/20 ${
+                  selectedSection === "Estadísticas Auditoría" ? "bg-white/40 rounded-lg" : ""
+                }`}
+              onClick={handleNavigateToAuditStatistics}
+            >
+              <span className="text-base">Estadísticas</span>
+            </div>
+          </div>
         </div>
       </div>
 
