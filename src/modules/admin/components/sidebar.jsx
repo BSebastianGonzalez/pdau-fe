@@ -53,13 +53,18 @@ const Sidebar = ({ adminData }) => {
     navigate('/audit_statistics', { state: { adminData } });
   };
 
+  const handleNavigateToAuditActions = () => {
+    setSelectedSection("Acciones administrativas");
+    navigate('/audit_actions', { state: { adminData } });
+  };
+
   return (
     <div className="h-full w-full bg-[#DB4747] text-white flex flex-col justify-between py-6">
       {/* Parte superior */}
       <div className="flex flex-col items-center">
         {/* Logo */}
         <div className="mb-8 flex items-center justify-center">
-          <img src="img/ufps.png" alt="UFPS Logo" className="w-16 h-auto" />
+          <img src="/img/ufps.png" alt="UFPS Logo" className="w-16 h-auto" />
         </div>
 
         {/* Sección de Inicio */}
@@ -69,7 +74,7 @@ const Sidebar = ({ adminData }) => {
           }`}
           onClick={() => handleSectionClick("Inicio")}
         >
-          <img src="img/home-alt.svg" alt="Inicio" className="w-6 h-6" />
+          <img src="/img/home-alt.svg" alt="Inicio" className="w-6 h-6" />
           <span className="text-lg font-medium">Inicio</span>
         </div>
 
@@ -79,11 +84,7 @@ const Sidebar = ({ adminData }) => {
             className="w-full px-4 py-3 flex items-center gap-4 cursor-pointer hover:bg-white/20"
             onClick={toggleDropdown}
           >
-            <img
-              src="img/personal_data.svg"
-              alt="Mis datos"
-              className="w-6 h-6"
-            />
+            <img src="/img/personal_data.svg" alt="Mis datos" className="w-6 h-6" />
             <span className="text-lg font-medium">Mis datos</span>
             <span
               className={`ml-auto transform transition-transform ${
@@ -118,11 +119,7 @@ const Sidebar = ({ adminData }) => {
             className="w-full px-4 py-3 flex items-center gap-4 cursor-pointer hover:bg-white/20"
             onClick={toggleComplaintDropdown}
           >
-            <img
-              src="img/complaint.svg"
-              alt="Denuncias anónimas"
-              className="w-6 h-6"
-            />
+            <img src="/img/complaint.svg" alt="Denuncias anónimas" className="w-6 h-6" />
             <span className="text-lg font-medium">Denuncias anónimas</span>
             <span
               className={`ml-auto transform transition-transform ${
@@ -171,7 +168,7 @@ const Sidebar = ({ adminData }) => {
           }`}
           onClick={handleNavigateToStatistics}
         >
-          <img src="img/check_complaint.svg" alt="Estadísticas" className="w-6 h-6" />
+          <img src="/img/check_complaint.svg" alt="Estadísticas" className="w-6 h-6" />
           <span className="text-lg font-medium">Estadísticas</span>
         </div>
 
@@ -181,7 +178,7 @@ const Sidebar = ({ adminData }) => {
             className="w-full px-4 py-3 flex items-center gap-4 cursor-pointer hover:bg-white/20"
             onClick={toggleAuditDropdown}
           >
-            <img src="img/filter.svg" alt="Auditoría" className="w-6 h-6" />
+            <img src="/img/filter.svg" alt="Auditoría" className="w-6 h-6" />
             <span className="text-lg font-medium">Auditoría</span>
             <span
               className={`ml-auto transform transition-transform ${
@@ -205,6 +202,14 @@ const Sidebar = ({ adminData }) => {
             >
               <span className="text-base">Estadísticas</span>
             </div>
+            <div
+              className={`w-full px-4 py-2 flex items-center gap-4 cursor-pointer hover:bg-white/20 ${
+                  selectedSection === "Acciones administrativas" ? "bg-white/40 rounded-lg" : ""
+                }`}
+              onClick={handleNavigateToAuditActions}
+            >
+              <span className="text-base">Acciones administrativas</span>
+            </div>
           </div>
         </div>
       </div>
@@ -214,11 +219,7 @@ const Sidebar = ({ adminData }) => {
         className="w-full px-4 py-3 flex items-center gap-4 cursor-pointer hover:bg-white/20"
         onClick={handleLogout}
       >
-        <img
-          src="img/cerrar-sesion.png"
-          alt="Cerrar sesión"
-          className="w-6 h-6"
-        />
+        <img src="/img/cerrar-sesion.png" alt="Cerrar sesión" className="w-6 h-6" />
         <span className="text-lg font-medium">Cerrar sesión</span>
       </div>
     </div>

@@ -21,6 +21,8 @@ import ForgotPasswordPage from './pages/admin/ForgotPasswordPage';
 import PasswordConfirmPage from './pages/admin/PasswordConfirmPage';
 import StatisticsPage from './pages/admin/StatisticsPage';
 import AuditStatisticsPage from './pages/admin/AuditStatisticsPage';
+import AuditActionsPage from './pages/admin/AuditActionsPage';
+import AdminActionsPage from './pages/admin/AdminActionsPage';
 
 function App() {
   return (
@@ -47,6 +49,8 @@ function App() {
         <Route path="/admin_password_confirm" element={<PasswordConfirmPage />} />
         <Route path="/statistics" element={<StatisticsPage />} />
         <Route path="/audit_statistics" element={<AuditStatisticsPage />} />
+        <Route path="/audit_actions" element={<AuditActionsPage />} />
+        <Route path="/audit_actions/:adminId" element={<AdminActionsPage />} />
       </Routes>
     </Router>
   );

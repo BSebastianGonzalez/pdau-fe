@@ -91,6 +91,39 @@ const AdminService = {
       throw error;
     }
   },
+
+  // Obtener archivados por admin
+  getArchivarDenunciasByAdminId: async (adminId) => {
+    try {
+      const response = await axios.get(`/archivar-denuncias/admin/${adminId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al obtener archivados por admin ${adminId}:`, error);
+      throw error;
+    }
+  },
+
+  // Obtener cambios de estado por admin
+  getCambiosEstadoByAdminId: async (adminId) => {
+    try {
+      const response = await axios.get(`/cambios-estado/admin/${adminId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al obtener cambios de estado por admin ${adminId}:`, error);
+      throw error;
+    }
+  },
+
+  // Obtener comentarios por admin
+  getComentariosByAdminId: async (adminId) => {
+    try {
+      const response = await axios.get(`/comentarios/admin/${adminId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al obtener comentarios por admin ${adminId}:`, error);
+      throw error;
+    }
+  },
 };
 
 export default AdminService;
