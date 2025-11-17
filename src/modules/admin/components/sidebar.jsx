@@ -8,6 +8,23 @@ const Sidebar = ({ adminData }) => {
   const [isAuditDropdownOpen, setIsAuditDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
+  const isEspAdmin = (admin) => {
+    if (!admin) return false;
+    // common role fields: 'rol', 'role', 'roles' (array), 'perfil'
+    const maybeRole = admin.rol || admin.role || admin.tipo || admin.perfil;
+    if (typeof maybeRole === 'string') {
+      if (maybeRole === 'ESP_ADMIN' || maybeRole.includes('ESP_ADMIN')) return true;
+    }
+    if (Array.isArray(maybeRole)) {
+      if (maybeRole.includes('ESP_ADMIN')) return true;
+    }
+    if (Array.isArray(admin.roles) && admin.roles.includes('ESP_ADMIN')) return true;
+    if (admin.perfil && typeof admin.perfil === 'object') {
+      if (admin.perfil.codigo === 'ESP_ADMIN' || admin.perfil.name === 'ESP_ADMIN') return true;
+    }
+    return false;
+  };
+
   const handleSectionClick = (section) => {
     setSelectedSection(section);
     if (section === "Inicio") {
@@ -173,12 +190,13 @@ const Sidebar = ({ adminData }) => {
         </div>
 
         {/* Sección Auditoría (desplegable) */}
+        {isEspAdmin(adminData) && (
         <div className="w-full">
           <div
             className="w-full px-4 py-3 flex items-center gap-4 cursor-pointer hover:bg-white/20"
             onClick={toggleAuditDropdown}
           >
-            <img src="/img/filter.svg" alt="Auditoría" className="w-6 h-6" />
+            <img src="/img/auditoria.png" alt="Auditoría" className="w-6 h-6" />
             <span className="text-lg font-medium">Auditoría</span>
             <span
               className={`ml-auto transform transition-transform ${
@@ -212,6 +230,7 @@ const Sidebar = ({ adminData }) => {
             </div>
           </div>
         </div>
+        )}
       </div>
 
       {/* Parte inferior */}
