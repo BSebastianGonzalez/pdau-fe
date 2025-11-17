@@ -8,21 +8,14 @@ const Sidebar = ({ adminData }) => {
   const [isAuditDropdownOpen, setIsAuditDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
-  const isEspAdmin = (admin) => {
+  // ensure we have admin info (prop or fallback to localStorage)
+  const currentAdmin = adminData || (() => {
+    try { return JSON.parse(localStorage.getItem('admin')); } catch { return null; }
+  })();
+
+  const isEspAdmin = (admin = currentAdmin) => {
     if (!admin) return false;
-    // common role fields: 'rol', 'role', 'roles' (array), 'perfil'
-    const maybeRole = admin.rol || admin.role || admin.tipo || admin.perfil;
-    if (typeof maybeRole === 'string') {
-      if (maybeRole === 'ESP_ADMIN' || maybeRole.includes('ESP_ADMIN')) return true;
-    }
-    if (Array.isArray(maybeRole)) {
-      if (maybeRole.includes('ESP_ADMIN')) return true;
-    }
-    if (Array.isArray(admin.roles) && admin.roles.includes('ESP_ADMIN')) return true;
-    if (admin.perfil && typeof admin.perfil === 'object') {
-      if (admin.perfil.codigo === 'ESP_ADMIN' || admin.perfil.name === 'ESP_ADMIN') return true;
-    }
-    return false;
+    return admin.role === 'ESP_ADMIN';
   };
 
   const handleSectionClick = (section) => {
